@@ -12,12 +12,14 @@
 #include <memory>
 #include <utility>
 #include <vector>
+#include <signal.h>
+
 using namespace std;
 
-#include "Socket.h"
-#include "Sync_queue.h"
-#include "ClientCommand.h"
-#include "Player.hpp"
+#include "lib/Socket.h"
+#include "lib/Sync_queue.h"
+#include "lib/ClientCommand.h"
+#include "models/Player.hpp"
 
 namespace machiavelli {
     const int tcp_port {1080};
@@ -91,6 +93,7 @@ void handle_client(shared_ptr<Socket> client) // this function runs in a separat
 
 int main(int argc, const char * argv[])
 {
+    signal(SIGPIPE, SIG_IGN);
     // start command consumer thread
     thread consumer {consume_command};
 
@@ -103,7 +106,7 @@ int main(int argc, const char * argv[])
 	while (true) {
 		try {
 			while (true) {
-				// wait for connection from client; will create new socket
+                // wait for connection from client; will create new socket
 				cerr << "server listening" << '\n';
 				unique_ptr<Socket> client {server.accept()};
 
