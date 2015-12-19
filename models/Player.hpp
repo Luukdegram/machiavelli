@@ -10,6 +10,10 @@
 #define Player_hpp
 
 #include <string>
+#include <bits/shared_ptr.h>
+#include <vector>
+#include "CharacterCard.h"
+#include "BuildingCard.h"
 
 class Player {
 public:
@@ -21,6 +25,10 @@ public:
 	
 private:
 	std::string name;
+	std::vector<std::shared_ptr<BuildingCard>> buildingCards;
+	std::vector<std::shared_ptr<CharacterCard>> characterCards;
+	int goldCoins;
+	bool isKing;
 };
 
 #endif /* Player_hpp */
