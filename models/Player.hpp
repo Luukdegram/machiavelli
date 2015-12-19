@@ -10,7 +10,7 @@
 #define Player_hpp
 
 #include <string>
-#include <bits/shared_ptr.h>
+#include <memory>
 #include <vector>
 #include "CharacterCard.h"
 #include "BuildingCard.h"

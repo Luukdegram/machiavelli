@@ -6,7 +6,7 @@
 #define MACHIAVELLI_GAMECONTROLLER_H
 
 
-#include <bits/shared_ptr.h>
+#include <memory>
 #include <vector>
 #include "../models/BuildingCard.h"
 #include "../models/CharacterCard.h"

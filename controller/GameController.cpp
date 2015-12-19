@@ -2,8 +2,7 @@
 // Created by ronald on 16-12-15.
 //
 
-#include <bits/stringfwd.h>
-#include <bits/basic_string.h>
+#include <string>
 #include "GameController.h"
 
 using namespace std;
