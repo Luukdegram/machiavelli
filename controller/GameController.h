@@ -8,6 +8,7 @@
 
 #include <memory>
 #include <vector>
+#include <sstream>
 #include "../models/BuildingCard.h"
 #include "../models/CharacterCard.h"
 
@@ -20,6 +21,12 @@ public:
     void init();
 
     void readCardsFromFile();
+
+    std::vector<std::vector<std::string>> getNextLineAndSplitIntoTokens(const std::string pathToFile);
+
+    void initBuildingCards();
+
+    void initCharacterCards();
 };
 
 

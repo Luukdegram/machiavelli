@@ -9,7 +9,6 @@
 class BaseCard {
 protected:
     int value;
-
 };
 
 

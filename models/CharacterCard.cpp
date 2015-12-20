@@ -3,3 +3,7 @@
 //
 
 #include "CharacterCard.h"
+
+CharacterCard::CharacterCard(int value, const std::string &name) {
+
+}
