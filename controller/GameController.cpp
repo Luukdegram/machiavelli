@@ -108,10 +108,26 @@ void GameController::playRandomCards(){
 }
 
 void GameController::doNextTurn(){
+
     for(shared_ptr<Player> player : players){
         player->getBuildingCards().clear();
         player->getCharacterCards().clear();
     }
+
+    shuffle(characterCards.begin(), characterCards.end(), dre);
+    shuffle(buildingCards.begin(), buildingCards.end(), dre);
+
     playRandomCards();
 
+    for(shared_ptr<CharacterCard> cc : characterCards){
+        for(shared_ptr<Player> player : players){
+            if(find(player->getCharacterCards().begin(), player->getCharacterCards().end(), cc) != player->getCharacterCards().end()){
+                doPlayerTurn(player);
+            }
+        }
+    }
+}
+
+void GameController::doPlayerTurn(shared_ptr<Player> player){
+    //Do stuff so the player can do his turn
 }

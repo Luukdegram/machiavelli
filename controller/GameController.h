@@ -42,6 +42,8 @@ public:
     std::shared_ptr<BuildingCard> getRandomBuildingCard();
 
     void doNextTurn();
+
+    void doPlayerTurn(std::shared_ptr<Player> player);
 };
 
 
