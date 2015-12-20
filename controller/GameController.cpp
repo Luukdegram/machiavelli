@@ -105,5 +105,13 @@ void GameController::playRandomCards(){
             players[i]->getBuildingCards().push_back(buildingCards[nextBuildingCard++]);
         }
     }
+}
+
+void GameController::doNextTurn(){
+    for(shared_ptr<Player> player : players){
+        player->getBuildingCards().clear();
+        player->getCharacterCards().clear();
+    }
+    playRandomCards();
 
 }

@@ -40,6 +40,8 @@ public:
     void getRandomCharacterCard(std::shared_ptr<Player> player);
 
     std::shared_ptr<BuildingCard> getRandomBuildingCard();
+
+    void doNextTurn();
 };
 
 
