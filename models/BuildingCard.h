@@ -9,7 +9,7 @@
 #include "BaseCard.h"
 
 class BuildingCard : public BaseCard {
-    enum Color {YELLOW, BLUE, GREEN, RED};
+    enum Color {YELLOW, BLUE, GREEN, RED, LILA};
     enum Type {};
 
 private:
@@ -22,7 +22,6 @@ public:
     void setColor(std::string);
 
     void setType(std::string);
-
 
     const Color &getColor() const {
         return color;

@@ -4,6 +4,6 @@
 
 #include "CharacterCard.h"
 
-CharacterCard::CharacterCard(int value, const std::string &name) {
-
+CharacterCard::CharacterCard(int value, const std::string &name) : name(name) {
+    setValue(value);
 }

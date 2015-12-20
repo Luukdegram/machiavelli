@@ -9,6 +9,16 @@
 class BaseCard {
 protected:
     int value;
+
+
+public:
+    int getValue() const {
+        return value;
+    }
+
+    void setValue(int value) {
+        BaseCard::value = value;
+    }
 };
 
 

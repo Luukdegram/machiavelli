@@ -13,8 +13,10 @@ void BuildingCard::setColor(string string) {
         color = RED;
     }else if(string.compare("blauw") == 0){
         color = BLUE;
-    }else{
+    }else if(string.compare("geel") == 0){
         color = YELLOW;
+    }else{
+        color = LILA;
     }
 }
 
@@ -23,9 +25,13 @@ void BuildingCard::setType(std::string type){
 }
 
 BuildingCard::BuildingCard(std::string color, std::string type, int value){
-
+    setValue(value);
+    setColor(color);
+    setType(type);
 }
 
-BuildingCard::BuildingCard(std::string color, std::string type, int value, std::string description) {
-
+BuildingCard::BuildingCard(std::string color, std::string type, int value, std::string description) : description(description) {
+    setValue(value);
+    setColor(color);
+    setType(type);
 }
