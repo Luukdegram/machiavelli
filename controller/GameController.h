@@ -8,14 +8,19 @@
 
 #include <memory>
 #include <vector>
+#include <random>
 #include <sstream>
 #include "../models/BuildingCard.h"
 #include "../models/CharacterCard.h"
+#include "../models/Player.hpp"
 
 class GameController {
 private:
     std::vector<std::shared_ptr<BuildingCard>> buildingCards;
     std::vector<std::shared_ptr<CharacterCard>> characterCards;
+    std::random_device dev;
+    std::default_random_engine dre{dev()};
+    std::vector<Player> players;
 
 public:
     void init();
@@ -27,6 +32,8 @@ public:
     void initBuildingCards();
 
     void initCharacterCards();
+
+    void playRandomCards();
 };
 
 

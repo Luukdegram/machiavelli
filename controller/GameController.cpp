@@ -13,6 +13,7 @@ using namespace std;
 void GameController::init() {
     initBuildingCards();
     initCharacterCards();
+    playRandomCards();
 }
 
 void GameController::readCardsFromFile() {
@@ -29,7 +30,6 @@ vector<vector<string>> GameController::getNextLineAndSplitIntoTokens(const strin
 
     while (getline(str, line))
     {
-        string s {line};
         stringstream  lineStream(line);
         istringstream iss(line);
 
@@ -68,4 +68,13 @@ void GameController::initCharacterCards(){
     for(vector<string> line : getNextLineAndSplitIntoTokens(pathToCharacterCards)){
         characterCards.push_back(shared_ptr<CharacterCard>(new CharacterCard(stoi(line[0]), line[1])));
     }
+}
+
+void GameController::playRandomCards(){
+    uniform_int_distribution<int> amountOfBuildingCards  {0, 64};
+    uniform_int_distribution<int> amountOfCharacterCards {0, 7};
+
+    //Set a random character card
+    players[0].setCharacterCard(characterCards[amountOfCharacterCards(dre)]);
+    players[1].setCharacterCard(characterCards[amountOfCharacterCards(dre)]);
 }
