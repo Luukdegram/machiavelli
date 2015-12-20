@@ -25,12 +25,11 @@ vector<vector<string>> GameController::getNextLineAndSplitIntoTokens(const strin
 
     vector<vector<string>> result;
     string line;
-    getline(str,line);
-
     string cell;
 
     while (getline(str, line))
     {
+        string s {line};
         stringstream  lineStream(line);
         istringstream iss(line);
 
