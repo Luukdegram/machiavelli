@@ -25,7 +25,7 @@ using namespace std;
 
 int main() {
 	GameController* gameController = new GameController;
-	gameController->initCharacterCards();
+	//gameController->initCharacterCards();
 	gameController->init();
 	// gameController->fillDungeons();
 	//   r->printMap();

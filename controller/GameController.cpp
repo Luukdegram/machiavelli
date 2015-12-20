@@ -5,12 +5,19 @@
 #include <sstream>
 #include <random>
 #include <memory>
+#include <algorithm>
 #include <fstream>
 #include "GameController.h"
 
 using namespace std;
 
 void GameController::init() {
+    players.push_back(shared_ptr<Player>(new Player("test player 1")));
+    players.push_back(shared_ptr<Player>(new Player("test player 2")));
+    players[0]->setGoldCoins(2);
+    players[0]->setIsKing(true);
+    players[1]->setGoldCoins(2);
+
     initBuildingCards();
     initCharacterCards();
     playRandomCards();
@@ -60,6 +67,8 @@ void GameController::initBuildingCards(){
             buildingCards.push_back(shared_ptr<BuildingCard>(new BuildingCard(line[2], line[0], stoi(line[1]), line[3])));
         }
     }
+
+    shuffle(buildingCards.begin(), buildingCards.end(), dre);
 }
 
 void GameController::initCharacterCards(){
@@ -68,13 +77,33 @@ void GameController::initCharacterCards(){
     for(vector<string> line : getNextLineAndSplitIntoTokens(pathToCharacterCards)){
         characterCards.push_back(shared_ptr<CharacterCard>(new CharacterCard(stoi(line[0]), line[1])));
     }
+
+    shuffle(characterCards.begin(), characterCards.end(), dre);
 }
 
-void GameController::playRandomCards(){
-    uniform_int_distribution<int> amountOfBuildingCards  {0, 64};
-    uniform_int_distribution<int> amountOfCharacterCards {0, 7};
+void GameController::getRandomCharacterCard(shared_ptr<Player> player){
+    characterCards[nextCharacterCard++];
+    player->getCharacterCards().push_back(characterCards[nextCharacterCard++]);
+}
 
-    //Set a random character card
-    players[0].setCharacterCard(characterCards[amountOfCharacterCards(dre)]);
-    players[1].setCharacterCard(characterCards[amountOfCharacterCards(dre)]);
+shared_ptr<BuildingCard> GameController::getRandomBuildingCard(){
+    return buildingCards[nextBuildingCard++];
+}
+
+//TODO remove magic numbers
+void GameController::playRandomCards(){
+    //Give each player two character cards
+    while(nextCharacterCard != 8){
+        for (int j = 0; j < 2; ++j) {
+            getRandomCharacterCard(players[j]);
+        }
+    }
+
+    //Give each player four building cards
+    for (int i = 0; i < 2; ++i) {
+        for (int j = 0; j < 4; ++j) {
+            players[i]->getBuildingCards().push_back(buildingCards[nextBuildingCard++]);
+        }
+    }
+
 }

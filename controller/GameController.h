@@ -20,7 +20,9 @@ private:
     std::vector<std::shared_ptr<CharacterCard>> characterCards;
     std::random_device dev;
     std::default_random_engine dre{dev()};
-    std::vector<Player> players;
+    std::vector<std::shared_ptr<Player>> players;
+    int nextBuildingCard;
+    int nextCharacterCard;
 
 public:
     void init();
@@ -34,6 +36,10 @@ public:
     void initCharacterCards();
 
     void playRandomCards();
+
+    void getRandomCharacterCard(std::shared_ptr<Player> player);
+
+    std::shared_ptr<BuildingCard> getRandomBuildingCard();
 };
 
 

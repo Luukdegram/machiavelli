@@ -26,10 +26,9 @@ public:
 private:
 	std::string name;
 	std::vector<std::shared_ptr<BuildingCard>> buildingCards;
-	std::shared_ptr<CharacterCard> characterCard;
+	std::vector<std::shared_ptr<CharacterCard>> characterCards;
 	int goldCoins;
 	bool isKing;
-
 
 public:
 	const std::string &getName() const {
@@ -40,7 +39,7 @@ public:
 		Player::name = name;
 	}
 
-	const std::vector<std::shared_ptr<BuildingCard>> &getBuildingCards() const {
+	std::vector<std::shared_ptr<BuildingCard>> &getBuildingCards() {
 		return buildingCards;
 	}
 
@@ -48,12 +47,12 @@ public:
 		Player::buildingCards = buildingCards;
 	}
 
-	const std::shared_ptr<CharacterCard> &getCharacterCard() const {
-		return characterCard;
+	std::vector<std::shared_ptr<CharacterCard>> &getCharacterCards() {
+		return characterCards;
 	}
 
-	void setCharacterCard(const std::shared_ptr<CharacterCard> &characterCard) {
-		Player::characterCard = characterCard;
+	void setCharacterCards(const std::vector<std::shared_ptr<CharacterCard>> &characterCards) {
+		Player::characterCards = characterCards;
 	}
 
 	int getGoldCoins() const {
