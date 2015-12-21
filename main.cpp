@@ -21,6 +21,7 @@ using namespace std;
 #include "lib/Sync_queue.h"
 #include "lib/ClientCommand.h"
 #include "models/Player.hpp"
+#include "controller/GameController.h"
 
 namespace machiavelli {
     const int tcp_port {1080};
