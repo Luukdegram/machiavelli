@@ -12,6 +12,7 @@
 #include <memory>
 #include <utility>
 #include <vector>
+#include <bits/signum.h>
 #include <signal.h>
 
 using namespace std;
@@ -35,15 +36,19 @@ void consume_command() // runs in its own thread
 			ClientCommand command {queue.get()}; // will block here unless there are still command objects in the queue
 			shared_ptr<Socket> client {command.get_client()};
 			shared_ptr<Player> player {command.get_player()};
+
 			try {
 				// TODO handle command here
 				*client << player->get_name() << ", you wrote: '" << command.get_cmd() << "', but I'll ignore that for now.\r\n" << machiavelli::prompt;
 			} catch (const exception& ex) {
 				cerr << "*** exception in consumer thread for player " << player->get_name() << ": " << ex.what() << '\n';
+
+                client->close();
+
 				if (client->is_open()) {
 					client->write("Sorry, something went wrong during handling of your request.\r\n");
 				}
-			} catch (...) {
+            } catch (...) {
 				cerr << "*** exception in consumer thread for player " << player->get_name() << '\n';
 				if (client->is_open()) {
 					client->write("Sorry, something went wrong during handling of your request.\r\n");
@@ -51,7 +56,8 @@ void consume_command() // runs in its own thread
 			}
         }
     } catch (...) {
-        cerr << "consume_command crashed\n";
+        cerr << "consume_command crashed, restarting... \n";
+        consume_command();
     }
 }
 
@@ -67,25 +73,35 @@ void handle_client(shared_ptr<Socket> client) // this function runs in a separat
 
         while (true) { // game loop
             try {
-                // read first line of request
-				string cmd {client->readline()};
-				cerr << '[' << client->get_dotted_ip() << " (" << client->get_socket() << ") " << player->get_name() << "] " << cmd << "\r\n";
+                if(client->is_open()) {
+                    // read first line of request
+                    string cmd{client->readline()};
+                    cerr << '[' << client->get_dotted_ip() << " (" << client->get_socket() << ") " << player->get_name() << "] " << cmd << '\n';
 
-                if (cmd == "quit") {
-                    client->write("Bye!\r\n");
-                    break; // out of game loop, will end this thread and close connection
+                    if (cmd == "quit") {
+                        client->write("Bye!\r\n");
+                        break;
+                    }
+
+                    ClientCommand command{cmd, client, player};
+                    queue.put(command);
+                } else {
+                    break;
                 }
 
-                ClientCommand command {cmd, client, player};
-                queue.put(command);
-
             } catch (const exception& ex) {
-				*client << "ERROR: " << ex.what() << "\r\n";
+				cerr << "*** exception in client handler thread for player " << player->get_name() << ": " << ex.what() << '\n';
+				if (client->is_open()) {
+					*client << "ERROR: " << ex.what() << "\r\n";
+				}
             } catch (...) {
-				client->write("ERROR: something went wrong during handling of your request. Sorry!\r\n");
+				cerr << "*** exception in client handler thread for player " << player->get_name() << '\n';
+				if (client->is_open()) {
+					client->write("ERROR: something went wrong during handling of your request. Sorry!\r\n");
+				}
             }
         }
-		client->close();
+		if (client->is_open()) client->close();
 	} catch (...) {
         cerr << "handle_client crashed\n";
     }
@@ -94,19 +110,20 @@ void handle_client(shared_ptr<Socket> client) // this function runs in a separat
 int main(int argc, const char * argv[])
 {
     signal(SIGPIPE, SIG_IGN);
+
     // start command consumer thread
     thread consumer {consume_command};
 
+    // keep client threads here, so we don't need to detach them
+    vector<thread> handlers;
+
 	// create a server socket
 	ServerSocket server {machiavelli::tcp_port};
-	
-	// keep client threads here, so we don't need to detach them
-	vector<thread> handlers;
 
-	while (true) {
+    while (true) {
 		try {
 			while (true) {
-                // wait for connection from client; will create new socket
+				// wait for connection from client; will create new socket
 				cerr << "server listening" << '\n';
 				unique_ptr<Socket> client {server.accept()};
 
@@ -120,10 +137,6 @@ int main(int argc, const char * argv[])
             cerr << "problems, problems, but: keep calm and carry on!\n";
         }
 	}
-	for (auto& elem : handlers) {
-		if (elem.joinable()) elem.join();
-	}
-	consumer.join();
     return 0;
 }
 

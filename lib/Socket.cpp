@@ -115,7 +115,7 @@ ssize_t Socket::read(char *buf, size_t maxlen) const
 	ssize_t len = 0;
 	// might come in parts
 	while (ssize_t n = ::recv(sock, buf + len, int(maxlen - len), 0)) {
-		throw_if_min1((int)n);
+		throw_if_min1(static_cast<int>(n));
 		len += n;
 		if (len >= maxlen) break;
 	}
@@ -136,7 +136,7 @@ std::string Socket::readline() const
 	char c;
 	while (ssize_t n = ::recv(sock, &c, 1, 0)) {
         if (n == 0) throw std::runtime_error("connection closed");
-		throw_if_min1((int)n);
+		throw_if_min1(static_cast<int>(n));
 		if (c == '\n') break;
 		if (c != '\r') line += c;
 	}
@@ -150,8 +150,10 @@ void Socket::write(const std::string& msg) const
 
 void Socket::write(const char *buf, size_t len) const
 {
-	throw_if_min1((int)::send(sock, buf, (int)len, 0));
+    int test = static_cast<int>(::send(sock, buf, (int)len, MSG_NOSIGNAL));
+	throw_if_min1(test);
 }
+
 
 void Socket::write(char c) const
 {
@@ -200,12 +202,12 @@ std::string Socket::get_dotted_ip() const
     switch (addr_p->sa_family) {
         case AF_INET: {
             const struct sockaddr_in* in_p = reinterpret_cast<const struct sockaddr_in*>(addr_p);
-            throw_if_null(result = ::inet_ntop(AF_INET, (void*)&in_p->sin_addr, textbuf, INET6_ADDRSTRLEN));
+            throw_if_null(result = ::inet_ntop(AF_INET, const_cast<struct in_addr*>(&in_p->sin_addr), textbuf, INET6_ADDRSTRLEN));
             break;
         }
         case AF_INET6: {
             const struct sockaddr_in6* in6_p = reinterpret_cast<const struct sockaddr_in6*>(addr_p);
-            throw_if_null(result = ::inet_ntop(AF_INET6, (void*)&in6_p->sin6_addr, textbuf, INET6_ADDRSTRLEN));
+            throw_if_null(result = ::inet_ntop(AF_INET6, const_cast<struct in6_addr*>(&in6_p->sin6_addr), textbuf, INET6_ADDRSTRLEN));
             break;
         }
         default:
@@ -225,7 +227,7 @@ ServerSocket::ServerSocket(int port)
 	saServer.sin_addr.s_addr = INADDR_ANY;
 	saServer.sin_port = htons(port);
 
-	throw_if_min1(::bind(sock, (struct sockaddr*)&saServer, sizeof(struct sockaddr)));
+    throw_if_min1(::bind(sock, reinterpret_cast<struct sockaddr*>(&saServer), sizeof(struct sockaddr)));
 	throw_if_min1(::listen(sock, 100));  // the number of clients that can be queued
 }
 
@@ -269,5 +271,5 @@ ClientSocket::ClientSocket(const std::string& host, int port)
     throw_if_min1(sock = ::socket(list->ai_family, list->ai_socktype, list->ai_protocol));
 
     // connect to server
-    throw_if_min1(::connect(sock, (struct sockaddr*)list->ai_addr, list->ai_addrlen));
+    throw_if_min1(::connect(sock, static_cast<struct sockaddr*>(list->ai_addr), list->ai_addrlen));
 }

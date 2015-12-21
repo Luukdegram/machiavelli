@@ -33,11 +33,11 @@ class Socket
 //=============================================================================
 {
 protected:
-	SOCKET sock;
+    SOCKET sock {0};
 	struct sockaddr_storage addr;
 
 public:
-	Socket() : sock(0) {}
+    Socket() {}
     Socket(SOCKET sock, const struct sockaddr& address);
 	Socket(const Socket& other) = delete;
 	Socket(Socket&& other);
