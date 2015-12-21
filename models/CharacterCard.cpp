@@ -10,6 +10,6 @@ CharacterCard::CharacterCard(int value, const std::string &name) : name(name) {
     setValue(value);
 }
 
-void CharacterCard::specialAbility() {
+void CharacterCard::doSpecialAbility(string command) {
 
 }

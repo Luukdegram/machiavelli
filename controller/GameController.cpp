@@ -85,7 +85,7 @@ void GameController::initCharacterCards(){
 }
 
 void GameController::getRandomCharacterCard(shared_ptr<Player> player){
-    characterCards[nextCharacterCard++];
+    nextCharacterCard++;
     player->getCharacterCards().push_back(characterCards[nextCharacterCard++]);
 }
 

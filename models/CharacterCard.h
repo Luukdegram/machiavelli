@@ -17,6 +17,7 @@ protected:
     std::string name;
     CharacterType characterType;
     bool isKilled;
+    bool isRobbed;
 
 public:
     CharacterCard(int value, const std::string &name);
@@ -46,7 +47,15 @@ public:
         CharacterCard::isKilled = isKilled;
     }
 
-    virtual void specialAbility();
+    bool isIsRobbed() const {
+        return isRobbed;
+    }
+
+    void setIsRobbed(bool isRobbed) {
+        CharacterCard::isRobbed = isRobbed;
+    }
+
+    virtual void doSpecialAbility(std::string command);
 };
 
 

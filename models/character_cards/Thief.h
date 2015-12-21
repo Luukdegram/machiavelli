@@ -12,6 +12,11 @@ class Thief : public CharacterCard {
 
 public:
     Thief(int value, const std::string &name) : CharacterCard(value, name) { }
+
+
+    CharacterType steal(std::string command);
+
+    virtual void doSpecialAbility(std::string command);
 };
 
 

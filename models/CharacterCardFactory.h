@@ -22,6 +22,11 @@ public:
     static std::shared_ptr<CharacterCardFactory> getInstance();
     std::shared_ptr<CharacterCard> createCharacterCard(std::string, std::string);
     void init();
+
+
+    const std::map<std::string, CharacterType> &getTypeRegistry() const {
+        return typeRegistry;
+    }
 };
 
 
