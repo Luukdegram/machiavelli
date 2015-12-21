@@ -16,6 +16,7 @@ class CharacterCard : public BaseCard {
 protected:
     std::string name;
     CharacterType characterType;
+    bool isKilled;
 
 public:
     CharacterCard(int value, const std::string &name);
@@ -35,6 +36,14 @@ public:
 
     const CharacterType &getCharacterType() const {
         return characterType;
+    }
+
+    bool isIsKilled() const {
+        return isKilled;
+    }
+
+    void setIsKilled(bool isKilled) {
+        CharacterCard::isKilled = isKilled;
     }
 
     virtual void specialAbility();

@@ -46,6 +46,10 @@ public:
     void doPlayerTurn(std::shared_ptr<Player> player);
 
     void setNextKing();
+
+    void playRandomBuildingCards();
+
+    void playRandomCharacterCards();
 };
 
 

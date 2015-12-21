@@ -8,25 +8,28 @@
 #include <string>
 #include <map>
 #include "BaseCard.h"
+#include "BuildingType.h"
+#include "BuildingColor.h"
 
 class BuildingCard : public BaseCard {
 
 private:
-    Color color;
+    BuildingColor color;
+    BuildingType buildingType;
     std::string description;
+    std::string name;
 public:
     BuildingCard(std::string _color, std::string _type, int _value, std::string _description);
     BuildingCard(std::string color, std::string type, int value);
 
     void setColor(std::string);
 
-    void setType(std::string);
 
-    const Color &getColor() const {
+    const BuildingColor &getColor() const {
         return color;
     }
 
-    void setColor(const Color &color) {
+    void setColor(const BuildingColor &color) {
         BuildingCard::color = color;
     }
 
@@ -37,6 +40,13 @@ public:
     void setDescription(const std::string &description) {
         BuildingCard::description = description;
     }
+
+
+    const std::string &getName() const {
+        return name;
+    }
+
+    void setType(std::string type);
 };
 
 

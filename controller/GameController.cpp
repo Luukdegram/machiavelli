@@ -95,13 +95,20 @@ shared_ptr<BuildingCard> GameController::getRandomBuildingCard(){
 
 //TODO remove magic numbers
 void GameController::playRandomCards(){
+    playRandomCharacterCards();
+    playRandomBuildingCards();
+}
+
+void GameController::playRandomCharacterCards(){
     //Give each player two character cards
     while(nextCharacterCard != 8){
         for (int j = 0; j < 2; ++j) {
             getRandomCharacterCard(players[j]);
         }
     }
+}
 
+void GameController::playRandomBuildingCards(){
     //Give each player four building cards
     for (int i = 0; i < 2; ++i) {
         for (int j = 0; j < 4; ++j) {
@@ -123,7 +130,9 @@ void GameController::doNextTurn(){
     shuffle(characterCards.begin(), characterCards.end(), dre);
     shuffle(buildingCards.begin(), buildingCards.end(), dre);
 
-    playRandomCards();
+    playRandomCharacterCards();
+
+    setNextKing();
 
     for(shared_ptr<CharacterCard> cc : characterCards){
         for(shared_ptr<Player> player : players){
@@ -139,7 +148,15 @@ void GameController::doPlayerTurn(shared_ptr<Player> player){
 }
 
 void GameController::setNextKing() {
-//    for (shared_ptr<Player> player : players) {
-//        for
-//    }
+    for (shared_ptr<Player> player : players) {
+        for(shared_ptr<CharacterCard> cc : player->getCharacterCards()){
+            if(cc->getCharacterType() == CharacterType::KING) {
+                for (shared_ptr<Player> p : players) {
+                    p->setIsKing(false);
+                }
+                player->setIsKing(true);
+                return;
+            }
+        }
+    }
 }

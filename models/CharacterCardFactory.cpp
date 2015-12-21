@@ -31,6 +31,7 @@ shared_ptr<CharacterCard> CharacterCardFactory::createCharacterCard(string name,
     p = registry.at(name);
     p->setName(name);
     p->setValue(stoi(value));
+    p->setIsKilled(false);
     p->setCharacterType(typeRegistry.at(name));
 
     return p;
