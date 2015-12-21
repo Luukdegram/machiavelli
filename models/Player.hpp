@@ -12,21 +12,22 @@
 #include <string>
 #include <memory>
 #include <vector>
-#include "CharacterCard.h"
 #include "BuildingCard.h"
+#include "../lib/Socket.h"
 
 class Player {
 public:
 	Player() {}
-	Player(const std::string& name) : name {name} {}
+	Player(const std::string& name, std::shared_ptr<Socket> socket) : name {name}, client(socket) {}
 	
 	std::string get_name() const { return name; }
 	void set_name(const std::string& new_name) { name = new_name; }
 	
 private:
+	std::shared_ptr<Socket> client;
 	std::string name;
 	std::vector<std::shared_ptr<BuildingCard>> buildingCards;
-	std::vector<std::shared_ptr<CharacterCard>> characterCards;
+	std::vector<std::shared_ptr<class CharacterCard>> characterCards;
 	std::vector<std::shared_ptr<BuildingCard>> buildBuildings;
 	int goldCoins;
 	bool isKing;
@@ -78,6 +79,11 @@ public:
 
 	void setIsKing(bool isKing) {
 		Player::isKing = isKing;
+	}
+
+
+	const std::shared_ptr<Socket> &getClient() const {
+		return client;
 	}
 };
 

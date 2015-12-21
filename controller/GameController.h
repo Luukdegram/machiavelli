@@ -13,6 +13,7 @@
 #include "../models/BuildingCard.h"
 #include "../models/CharacterCard.h"
 #include "../models/Player.hpp"
+#include "../lib/Socket.h"
 
 class GameController {
 private:
@@ -23,6 +24,7 @@ private:
     std::vector<std::shared_ptr<Player>> players;
     int nextBuildingCard;
     int nextCharacterCard;
+    std::vector<std::shared_ptr<Socket>> sockets;
 
 public:
     void init();
@@ -51,6 +53,10 @@ public:
 
     void playRandomCharacterCards();
 
+
+     std::vector<std::shared_ptr<Socket>> &getSockets() {
+        return sockets;
+    }
 
     std::vector<std::shared_ptr<Player>> &getPlayers() {
         return players;

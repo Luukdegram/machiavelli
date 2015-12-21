@@ -26,6 +26,6 @@ CharacterType Thief::steal(string command) {
     return type;
 }
 
-void Thief::doSpecialAbility(string command) {
+void Thief::doSpecialAbility(shared_ptr<Player> ptr, std::string command) {
     steal(command);
 }

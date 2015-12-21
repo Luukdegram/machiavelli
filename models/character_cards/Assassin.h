@@ -15,7 +15,7 @@ public:
 
     CharacterType assassinate(std::string command);
 
-    virtual void doSpecialAbility(std::string command);
+    virtual void doSpecialAbility(std::shared_ptr<Player>, std::string command);
 };
 
 

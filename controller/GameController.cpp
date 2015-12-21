@@ -95,6 +95,22 @@ shared_ptr<BuildingCard> GameController::getRandomBuildingCard(){
 void GameController::playRandomCards(){
     playRandomCharacterCards();
     playRandomBuildingCards();
+
+    for(shared_ptr<Socket> client : sockets){
+        client->write("Starting game!\r\n");
+    }
+
+    for(shared_ptr<Player> p : players){
+        p->getClient()->write("Cold coins: " + to_string(p->getGoldCoins()) + "\r\n");
+        p->getClient()->write("Build buildings: \r\n");
+        if(p->getBuildBuildings().size() > 0) {
+            for (shared_ptr<BuildingCard> bc : p->getBuildBuildings()) {
+                p->getClient()->write("-> " + bc->getName() + "  is worth: " + to_string(bc->getValue()) + "\r\n");
+            }
+        }else{
+            p->getClient()->write("No buildings yet.\r\n");
+        }
+    }
 }
 
 void GameController::playRandomCharacterCards(){
@@ -116,6 +132,22 @@ void GameController::playRandomBuildingCards(){
 }
 
 void GameController::doNextTurn(){
+
+    for(shared_ptr<Socket> client : sockets){
+        client->write("Starting next turn!\r\n");
+    }
+
+    for(shared_ptr<Player> p : players){
+        p->getClient()->write("Cold coins: " + to_string(p->getGoldCoins()) + "\r\n");
+        p->getClient()->write("Build buildings: \r\n");
+        if(p->getBuildBuildings().size() > 0) {
+            for (shared_ptr<BuildingCard> bc : p->getBuildBuildings()) {
+                p->getClient()->write("-> " + bc->getName() + "  is worth: " + to_string(bc->getValue()) + "\r\n");
+            }
+        }else{
+            p->getClient()->write("No buildings yet.\r\n");
+        }
+    }
 
     nextBuildingCard = 0;
     nextCharacterCard = 0;

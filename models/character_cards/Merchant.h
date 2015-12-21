@@ -6,12 +6,18 @@
 #define MACHIAVELLI_MERCHANT_H
 
 
+#include <memory>
 #include "../CharacterCard.h"
+#include "../Player.hpp"
 
 class Merchant : public CharacterCard {
 
 public:
     Merchant(int value, const std::string &name) : CharacterCard(value, name) { }
+
+    void addCoins(std::shared_ptr<Player> p);
+
+    virtual void doSpecialAbility(std::shared_ptr<Player>, std::string);
 };
 
 

@@ -42,6 +42,10 @@ public:
     }
 
 
+    const BuildingType &getBuildingType() const {
+        return buildingType;
+    }
+
     const std::string &getName() const {
         return name;
     }

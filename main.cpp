@@ -24,9 +24,11 @@ using namespace std;
 #include "controller/GameController.h"
 
 namespace machiavelli {
-    const int tcp_port {1080};
+    const int tcp_port {1081};
     const string prompt {"machiavelli> "};
 }
+
+//TODO put the server stuff in a seperate class
 unique_ptr<GameController> g(new GameController);
 static Sync_queue<ClientCommand> queue;
 
@@ -69,10 +71,10 @@ void handle_client(shared_ptr<Socket> client) // this function runs in a separat
 		client->write("What's your name?\r\n");
         client->write(machiavelli::prompt);
 		string name {client->readline()};
-		shared_ptr<Player> player {new Player {name}};
+		shared_ptr<Player> player {new Player {name, client}};
         g->getPlayers().push_back(player);
 		*client << "Welcome, " << name << ", have fun playing our game!\r\n" << machiavelli::prompt;
-
+        g->getSockets().push_back(client);
         //Initialize the game when there are enough players
         if(g->getPlayers().size() == 2){
             g->init();
@@ -116,7 +118,6 @@ void handle_client(shared_ptr<Socket> client) // this function runs in a separat
 
 int main(int argc, const char * argv[])
 {
-    g->init();
     signal(SIGPIPE, SIG_IGN);
 
     // start command consumer thread

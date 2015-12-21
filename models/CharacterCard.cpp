@@ -3,6 +3,7 @@
 //
 
 #include "CharacterCard.h"
+#include "Player.hpp"
 #include <string>
 using namespace std;
 
@@ -10,6 +11,6 @@ CharacterCard::CharacterCard(int value, const std::string &name) : name(name) {
     setValue(value);
 }
 
-void CharacterCard::doSpecialAbility(string command) {
+void CharacterCard::doSpecialAbility(shared_ptr<Player> ptr, std::string command) {
 
 }

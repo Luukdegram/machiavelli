@@ -9,6 +9,7 @@
 #include <map>
 #include "BaseCard.h"
 #include "CharacterType.h"
+#include "Player.hpp"
 
 
 class CharacterCard : public BaseCard {
@@ -55,7 +56,7 @@ public:
         CharacterCard::isRobbed = isRobbed;
     }
 
-    virtual void doSpecialAbility(std::string command);
+    virtual void doSpecialAbility(std::shared_ptr<Player>, std::string command);
 };
 
 

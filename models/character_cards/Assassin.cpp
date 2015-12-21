@@ -8,14 +8,14 @@
 
 using namespace std;
 
-void Assassin::doSpecialAbility(std::string command) {
-    assassinate(command);
-}
-
 CharacterType Assassin::assassinate(string command){
     try {
         return CharacterCardFactory::getInstance()->getTypeRegistry().at(command);
     }catch(exception e){
       cout << e.what();
     }
+}
+
+void Assassin::doSpecialAbility(shared_ptr<Player> ptr, std::string command) {
+    assassinate(command);
 }
