@@ -3,3 +3,7 @@
 //
 
 #include "BaseCard.h"
+
+void BaseCard::setType(std::string type) {
+
+}

@@ -6,13 +6,16 @@
 #define MACHIAVELLI_CHARACTERCARD_H
 
 #include <string>
+#include <map>
 #include "BaseCard.h"
+#include "CharacterType.h"
 
 
 class CharacterCard : public BaseCard {
-private:
-    std::string name;
 
+protected:
+    std::string name;
+    CharacterType characterType;
 
 public:
     CharacterCard(int value, const std::string &name);
@@ -25,6 +28,16 @@ public:
     void setName(const std::string &name) {
         CharacterCard::name = name;
     }
+
+    void setCharacterType(const CharacterType &characterType) {
+        CharacterCard::characterType = characterType;
+    }
+
+    const CharacterType &getCharacterType() const {
+        return characterType;
+    }
+
+    virtual void specialAbility();
 };
 
 

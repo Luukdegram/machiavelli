@@ -110,34 +110,37 @@ void handle_client(shared_ptr<Socket> client) // this function runs in a separat
 
 int main(int argc, const char * argv[])
 {
-    signal(SIGPIPE, SIG_IGN);
 
-    // start command consumer thread
-    thread consumer {consume_command};
-
-    // keep client threads here, so we don't need to detach them
-    vector<thread> handlers;
-
-	// create a server socket
-	ServerSocket server {machiavelli::tcp_port};
-
-    while (true) {
-		try {
-			while (true) {
-				// wait for connection from client; will create new socket
-				cerr << "server listening" << '\n';
-				unique_ptr<Socket> client {server.accept()};
-
-				// communicate with client over new socket in separate thread
-                thread handler {handle_client, move(client)};
-				handlers.push_back(move(handler));
-			}
-		} catch (const exception& ex) {
-			cerr << ex.what() << ", resuming..." << '\n';
-        } catch (...) {
-            cerr << "problems, problems, but: keep calm and carry on!\n";
-        }
-	}
+    GameController* g = new GameController;
+    g->init();
+//    signal(SIGPIPE, SIG_IGN);
+//
+//    // start command consumer thread
+//    thread consumer {consume_command};
+//
+//    // keep client threads here, so we don't need to detach them
+//    vector<thread> handlers;
+//
+//	// create a server socket
+//	ServerSocket server {machiavelli::tcp_port};
+//
+//    while (true) {
+//		try {
+//			while (true) {
+//				// wait for connection from client; will create new socket
+//				cerr << "server listening" << '\n';
+//				unique_ptr<Socket> client {server.accept()};
+//
+//				// communicate with client over new socket in separate thread
+//                thread handler {handle_client, move(client)};
+//				handlers.push_back(move(handler));
+//			}
+//		} catch (const exception& ex) {
+//			cerr << ex.what() << ", resuming..." << '\n';
+//        } catch (...) {
+//            cerr << "problems, problems, but: keep calm and carry on!\n";
+//        }
+//	}
     return 0;
 }
 

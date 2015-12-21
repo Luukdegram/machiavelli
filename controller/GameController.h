@@ -44,6 +44,8 @@ public:
     void doNextTurn();
 
     void doPlayerTurn(std::shared_ptr<Player> player);
+
+    void setNextKing();
 };
 
 

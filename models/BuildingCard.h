@@ -5,12 +5,11 @@
 #ifndef MACHIAVELLI_BUILDINGCARD_H
 #define MACHIAVELLI_BUILDINGCARD_H
 
-#include "string"
+#include <string>
+#include <map>
 #include "BaseCard.h"
 
 class BuildingCard : public BaseCard {
-    enum Color {YELLOW, BLUE, GREEN, RED, LILA};
-    enum Type {};
 
 private:
     Color color;

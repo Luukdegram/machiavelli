@@ -34,4 +34,5 @@ BuildingCard::BuildingCard(std::string color, std::string type, int value, std::
     setValue(value);
     setColor(color);
     setType(type);
+    setDescription(description);
 }

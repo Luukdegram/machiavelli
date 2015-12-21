@@ -8,6 +8,7 @@
 #include <algorithm>
 #include <fstream>
 #include "GameController.h"
+#include "../models/CharacterCardFactory.h"
 
 using namespace std;
 
@@ -75,7 +76,9 @@ void GameController::initCharacterCards(){
     const string pathToCharacterCards {"/home/ronald/Documents/School/EIndopdrachtc++2/rescources/karakterkaarten.csv"};
 
     for(vector<string> line : getNextLineAndSplitIntoTokens(pathToCharacterCards)){
-        characterCards.push_back(shared_ptr<CharacterCard>(new CharacterCard(stoi(line[0]), line[1])));
+       // characterCards.push_back(shared_ptr<CharacterCard>(new CharacterCard(stoi(line[0]), line[1])));
+        line[1].erase(line[1].size() - 1);
+        characterCards.push_back(CharacterCardFactory::getInstance()->createCharacterCard(line[1], line[0]));
     }
 
     shuffle(characterCards.begin(), characterCards.end(), dre);
@@ -109,6 +112,9 @@ void GameController::playRandomCards(){
 
 void GameController::doNextTurn(){
 
+    nextBuildingCard = 0;
+    nextCharacterCard = 0;
+
     for(shared_ptr<Player> player : players){
         player->getBuildingCards().clear();
         player->getCharacterCards().clear();
@@ -130,4 +136,10 @@ void GameController::doNextTurn(){
 
 void GameController::doPlayerTurn(shared_ptr<Player> player){
     //Do stuff so the player can do his turn
+}
+
+void GameController::setNextKing() {
+//    for (shared_ptr<Player> player : players) {
+//        for
+//    }
 }
