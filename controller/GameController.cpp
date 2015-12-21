@@ -13,8 +13,6 @@
 using namespace std;
 
 void GameController::init() {
-    players.push_back(shared_ptr<Player>(new Player("test player 1")));
-    players.push_back(shared_ptr<Player>(new Player("test player 2")));
     players[0]->setGoldCoins(2);
     players[0]->setIsKing(true);
     players[1]->setGoldCoins(2);

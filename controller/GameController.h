@@ -50,6 +50,11 @@ public:
     void playRandomBuildingCards();
 
     void playRandomCharacterCards();
+
+
+    std::vector<std::shared_ptr<Player>> &getPlayers() {
+        return players;
+    }
 };
 
 

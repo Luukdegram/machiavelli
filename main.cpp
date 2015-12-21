@@ -27,7 +27,7 @@ namespace machiavelli {
     const int tcp_port {1080};
     const string prompt {"machiavelli> "};
 }
-
+unique_ptr<GameController> g(new GameController);
 static Sync_queue<ClientCommand> queue;
 
 void consume_command() // runs in its own thread
@@ -70,7 +70,13 @@ void handle_client(shared_ptr<Socket> client) // this function runs in a separat
         client->write(machiavelli::prompt);
 		string name {client->readline()};
 		shared_ptr<Player> player {new Player {name}};
+        g->getPlayers().push_back(player);
 		*client << "Welcome, " << name << ", have fun playing our game!\r\n" << machiavelli::prompt;
+
+        //Initialize the game when there are enough players
+        if(g->getPlayers().size() == 2){
+            g->init();
+        }
 
         while (true) { // game loop
             try {
@@ -110,37 +116,35 @@ void handle_client(shared_ptr<Socket> client) // this function runs in a separat
 
 int main(int argc, const char * argv[])
 {
-
-    GameController* g = new GameController;
     g->init();
-//    signal(SIGPIPE, SIG_IGN);
-//
-//    // start command consumer thread
-//    thread consumer {consume_command};
-//
-//    // keep client threads here, so we don't need to detach them
-//    vector<thread> handlers;
-//
-//	// create a server socket
-//	ServerSocket server {machiavelli::tcp_port};
-//
-//    while (true) {
-//		try {
-//			while (true) {
-//				// wait for connection from client; will create new socket
-//				cerr << "server listening" << '\n';
-//				unique_ptr<Socket> client {server.accept()};
-//
-//				// communicate with client over new socket in separate thread
-//                thread handler {handle_client, move(client)};
-//				handlers.push_back(move(handler));
-//			}
-//		} catch (const exception& ex) {
-//			cerr << ex.what() << ", resuming..." << '\n';
-//        } catch (...) {
-//            cerr << "problems, problems, but: keep calm and carry on!\n";
-//        }
-//	}
+    signal(SIGPIPE, SIG_IGN);
+
+    // start command consumer thread
+    thread consumer {consume_command};
+
+    // keep client threads here, so we don't need to detach them
+    vector<thread> handlers;
+
+	// create a server socket
+	ServerSocket server {machiavelli::tcp_port};
+
+    while (true) {
+		try {
+			while (true) {
+				// wait for connection from client; will create new socket
+				cerr << "server listening" << '\n';
+				unique_ptr<Socket> client {server.accept()};
+
+				// communicate with client over new socket in separate thread
+                thread handler {handle_client, move(client)};
+				handlers.push_back(move(handler));
+			}
+		} catch (const exception& ex) {
+			cerr << ex.what() << ", resuming..." << '\n';
+        } catch (...) {
+            cerr << "problems, problems, but: keep calm and carry on!\n";
+        }
+	}
     return 0;
 }
 
