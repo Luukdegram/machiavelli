@@ -45,7 +45,7 @@ public:
 
     void doNextTurn();
 
-    void doPlayerTurn(std::shared_ptr<Player> player);
+    void doPlayerTurn(std::shared_ptr<Player> player, std::shared_ptr<CharacterCard>);
 
     void setNextKing();
 
@@ -61,6 +61,10 @@ public:
     std::vector<std::shared_ptr<Player>> &getPlayers() {
         return players;
     }
+
+    void showUI(std::shared_ptr<Player> player);
+
+    void showGameUI(std::shared_ptr<Player> p, std::shared_ptr<CharacterCard>);
 };
 
 

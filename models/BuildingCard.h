@@ -18,6 +18,7 @@ private:
     BuildingType buildingType;
     std::string description;
     std::string name;
+    std::string colorName;
 public:
     BuildingCard(std::string _color, std::string _type, int _value, std::string _description);
     BuildingCard(std::string color, std::string type, int value);
@@ -31,6 +32,11 @@ public:
 
     void setColor(const BuildingColor &color) {
         BuildingCard::color = color;
+    }
+
+
+    const std::string &getColorName() const {
+        return colorName;
     }
 
     const std::string &getDescription() const {

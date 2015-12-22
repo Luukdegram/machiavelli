@@ -20,6 +20,7 @@ void GameController::init() {
     initBuildingCards();
     initCharacterCards();
     playRandomCards();
+    doNextTurn();
 }
 
 void GameController::readCardsFromFile() {
@@ -91,7 +92,6 @@ shared_ptr<BuildingCard> GameController::getRandomBuildingCard(){
     return buildingCards[nextBuildingCard++];
 }
 
-//TODO remove magic numbers
 void GameController::playRandomCards(){
     playRandomCharacterCards();
     playRandomBuildingCards();
@@ -100,19 +100,12 @@ void GameController::playRandomCards(){
         client->write("Starting game!\r\n");
     }
 
-    for(shared_ptr<Player> p : players){
-        p->getClient()->write("Cold coins: " + to_string(p->getGoldCoins()) + "\r\n");
-        p->getClient()->write("Build buildings: \r\n");
-        if(p->getBuildBuildings().size() > 0) {
-            for (shared_ptr<BuildingCard> bc : p->getBuildBuildings()) {
-                p->getClient()->write("-> " + bc->getName() + "  is worth: " + to_string(bc->getValue()) + "\r\n");
-            }
-        }else{
-            p->getClient()->write("No buildings yet.\r\n");
-        }
+    for(shared_ptr<Player> p : players) {
+        showUI(p);
     }
 }
 
+//TODO remove magic numbers
 void GameController::playRandomCharacterCards(){
     //Give each player two character cards
     while(nextCharacterCard != 8){
@@ -122,6 +115,7 @@ void GameController::playRandomCharacterCards(){
     }
 }
 
+//TODO remove magic numbers
 void GameController::playRandomBuildingCards(){
     //Give each player four building cards
     for (int i = 0; i < 2; ++i) {
@@ -138,15 +132,7 @@ void GameController::doNextTurn(){
     }
 
     for(shared_ptr<Player> p : players){
-        p->getClient()->write("Cold coins: " + to_string(p->getGoldCoins()) + "\r\n");
-        p->getClient()->write("Build buildings: \r\n");
-        if(p->getBuildBuildings().size() > 0) {
-            for (shared_ptr<BuildingCard> bc : p->getBuildBuildings()) {
-                p->getClient()->write("-> " + bc->getName() + "  is worth: " + to_string(bc->getValue()) + "\r\n");
-            }
-        }else{
-            p->getClient()->write("No buildings yet.\r\n");
-        }
+        showUI(p);
     }
 
     nextBuildingCard = 0;
@@ -167,14 +153,15 @@ void GameController::doNextTurn(){
     for(shared_ptr<CharacterCard> cc : characterCards){
         for(shared_ptr<Player> player : players){
             if(find(player->getCharacterCards().begin(), player->getCharacterCards().end(), cc) != player->getCharacterCards().end()){
-                doPlayerTurn(player);
+                doPlayerTurn(player, cc);
             }
         }
     }
 }
 
-void GameController::doPlayerTurn(shared_ptr<Player> player){
+void GameController::doPlayerTurn(shared_ptr<Player> player, shared_ptr<CharacterCard> cc){
     //Do stuff so the player can do his turn
+    showGameUI(player, cc);
 }
 
 void GameController::setNextKing() {
@@ -188,5 +175,37 @@ void GameController::setNextKing() {
                 return;
             }
         }
+    }
+}
+
+void GameController::showUI(shared_ptr<Player> p){
+    p->getClient()->clear_screen();
+    p->getClient()->write("Gold coins: " + to_string(p->getGoldCoins()) + "\r\n");
+    p->getClient()->write("Build buildings: \r\n");
+    if(p->getBuildBuildings().size() > 0) {
+        for (shared_ptr<BuildingCard> bc : p->getBuildBuildings()) {
+            p->getClient()->write("-> " + bc->getName() + "  is worth: " + to_string(bc->getValue()) + "\r\n");
+        }
+    }else{
+        p->getClient()->write("No buildings yet.\r\n");
+    }
+}
+
+void GameController::showGameUI(shared_ptr<Player> p, shared_ptr<CharacterCard> cc){
+    p->getClient()->clear_screen();
+    p->getClient()->write("You are now the: " + cc->getName() + "\r\n");
+    p->getClient()->write("Gold coins: " + to_string(p->getGoldCoins()) + "\r\n");
+    p->getClient()->write("Build buildings: \r\n");
+    if(p->getBuildBuildings().size() > 0) {
+        for (shared_ptr<BuildingCard> bc : p->getBuildBuildings()) {
+            p->getClient()->write("-> " + bc->getName() + "  is worth: " + to_string(bc->getValue()) + "\r\n");
+        }
+    }else{
+        p->getClient()->write("No buildings yet.\r\n");
+    }
+
+    p->getClient()->write("Cards in hand: \r\n");
+    for(shared_ptr<BuildingCard> b : p->getBuildingCards()){
+        p->getClient()->write("-> " + b->getName() + " <" + to_string(b->getValue()) + ", " + b->getColorName() + ">\r\n");
     }
 }

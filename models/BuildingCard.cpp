@@ -10,13 +10,13 @@ using namespace std;
 
 
 
-BuildingCard::BuildingCard(std::string color, std::string type, int value):  name(type) {
+BuildingCard::BuildingCard(std::string color, std::string type, int value):  name(type), colorName(color) {
     setValue(value);
     setColor(color);
     setType(type);
 }
 
-BuildingCard::BuildingCard(std::string color, std::string type, int value, std::string description) : description(description), name(type) {
+BuildingCard::BuildingCard(std::string color, std::string type, int value, std::string description) : description(description), name(type), colorName(color) {
     setValue(value);
     setColor(color);
     setType(type);

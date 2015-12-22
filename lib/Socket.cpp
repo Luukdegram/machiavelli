@@ -273,3 +273,7 @@ ClientSocket::ClientSocket(const std::string& host, int port)
     // connect to server
     throw_if_min1(::connect(sock, static_cast<struct sockaddr*>(list->ai_addr), list->ai_addrlen));
 }
+
+void Socket::clear_screen() {
+	write("\u001B[2J");
+}

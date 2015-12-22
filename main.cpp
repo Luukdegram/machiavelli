@@ -89,6 +89,11 @@ void handle_client(shared_ptr<Socket> client) // this function runs in a separat
 
                     if (cmd == "quit") {
                         client->write("Bye!\r\n");
+//                        for(shared_ptr<Player> p : g->getPlayers()){
+//                            if(p->getClient() == client){
+//
+//                            }
+//                        }
                         break;
                     }
 
