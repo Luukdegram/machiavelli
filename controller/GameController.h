@@ -65,6 +65,8 @@ public:
     void showUI(std::shared_ptr<Player> player);
 
     void showGameUI(std::shared_ptr<Player> p, std::shared_ptr<CharacterCard>);
+
+    void setUpRound();
 };
 
 

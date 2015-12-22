@@ -20,7 +20,8 @@ void GameController::init() {
     initBuildingCards();
     initCharacterCards();
     playRandomCards();
-    doNextTurn();
+    setUpRound();
+    //doNextTurn();
 }
 
 void GameController::readCardsFromFile() {
@@ -139,7 +140,6 @@ void GameController::doNextTurn(){
     nextCharacterCard = 0;
 
     for(shared_ptr<Player> player : players){
-        player->getBuildingCards().clear();
         player->getCharacterCards().clear();
     }
 
@@ -184,10 +184,10 @@ void GameController::showUI(shared_ptr<Player> p){
     p->getClient()->write("Build buildings: \r\n");
     if(p->getBuildBuildings().size() > 0) {
         for (shared_ptr<BuildingCard> bc : p->getBuildBuildings()) {
-            p->getClient()->write("-> " + bc->getName() + "  is worth: " + to_string(bc->getValue()) + "\r\n");
+            p->getClient()->write("  -> " + bc->getName() + "  is worth: " + to_string(bc->getValue()) + "\r\n");
         }
     }else{
-        p->getClient()->write("No buildings yet.\r\n");
+        p->getClient()->write("  No buildings yet.\r\n");
     }
 }
 
@@ -198,14 +198,63 @@ void GameController::showGameUI(shared_ptr<Player> p, shared_ptr<CharacterCard> 
     p->getClient()->write("Build buildings: \r\n");
     if(p->getBuildBuildings().size() > 0) {
         for (shared_ptr<BuildingCard> bc : p->getBuildBuildings()) {
-            p->getClient()->write("-> " + bc->getName() + "  is worth: " + to_string(bc->getValue()) + "\r\n");
+            p->getClient()->write("  -> " + bc->getName() + "  is worth: " + to_string(bc->getValue()) + "\r\n");
         }
     }else{
-        p->getClient()->write("No buildings yet.\r\n");
+        p->getClient()->write("  No buildings yet.\r\n");
     }
 
     p->getClient()->write("Cards in hand: \r\n");
-    for(shared_ptr<BuildingCard> b : p->getBuildingCards()){
-        p->getClient()->write("-> " + b->getName() + " <" + to_string(b->getValue()) + ", " + b->getColorName() + ">\r\n");
+    if(p->getBuildingCards().size() > 0) {
+        for (shared_ptr<BuildingCard> b : p->getBuildingCards()) {
+            p->getClient()->write(
+                    "  -> " + b->getName() + " <" + to_string(b->getValue()) + ", " + b->getColorName() + ">\r\n");
+        }
+    }else{
+        p->getClient()->write("  No cards in hand.\r\n");
     }
+
+    p->getClient()->write("Choose an option: \r\n");
+    p->getClient()->write("[0] Look at the amount of gold and the buildings of the opponent first.\r\n");
+    p->getClient()->write("[1] Take two gold coins.\r\n");
+    p->getClient()->write("[2] Take two building cards and put one back.\r\n");
+    p->getClient()->write("[3] Use your special abbility: .\r\n");
+    p->getClient()->write("[4] Show help.\r\n");
+    p->getClient()->write("machiavelli> ");
+}
+
+void GameController::setUpRound(){
+    vector<shared_ptr<CharacterCard>> availableCards = characterCards;
+    shared_ptr<Player> king;
+    shared_ptr<Player> otherPlayer;
+    shared_ptr<Player> currentPlayer;
+
+    for(shared_ptr<Player> p : players){
+        if(p->isIsKing()){
+            king = p;
+            currentPlayer = king;
+        }else{
+            otherPlayer = p;
+        }
+    }
+
+    next:
+    currentPlayer->getClient()->clear_screen();
+    currentPlayer->getClient()->write("Choose one of the cards below: \r\n");
+    for (int i = 0; i < availableCards.size(); ++i) {
+        currentPlayer->getClient()->write("[" + to_string(i) + "] " + availableCards[i]->getName() + "\r\n");
+    }
+    currentPlayer->getClient()->write("machiavelli> ");
+
+    if(availableCards.size() > 0){
+        if(currentPlayer == king){
+            currentPlayer = otherPlayer;
+        }else{
+            currentPlayer = king;
+        }
+        goto next;
+    }else{
+        //Start game
+    }
+
 }
