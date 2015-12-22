@@ -28,6 +28,8 @@ private:
     std::vector<std::shared_ptr<Socket>> sockets;
     bool isInSetup;
     bool isPlaying;
+    bool firstCard;
+    bool secondCard;
 
 public:
     void init();
@@ -88,11 +90,34 @@ public:
         GameController::isPlaying = isPlaying;
     }
 
-    std::vector<std::shared_ptr<CharacterCard>> pickCard(int index, std::shared_ptr<Player> player);
+    void pickCard(int index, std::shared_ptr<Player> player);
 
-    std::vector<std::shared_ptr<CharacterCard>> removeCard(int index, std::shared_ptr<Player> player);
+    void removeCard(int index, std::shared_ptr<Player> player);
 
     void showAvailableCards(std::shared_ptr<Player> currentPlayer);
+
+    void pickOneCardToKeep(std::shared_ptr<Player> currentPlayer);
+
+    void pickOneCardToRemove(std::shared_ptr<Player> currentPlayer);
+
+
+    bool isFirstCard() const {
+        return firstCard;
+    }
+
+    void setFirstCard(bool firstCard) {
+        GameController::firstCard = firstCard;
+    }
+
+    bool isSecondCard() const {
+        return secondCard;
+    }
+
+    void setSecondCard(bool secondCard) {
+        GameController::secondCard = secondCard;
+    }
+
+    void goToNextPlayer();
 };
 
 

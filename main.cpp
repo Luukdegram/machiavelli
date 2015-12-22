@@ -24,7 +24,7 @@ using namespace std;
 #include "controller/GameController.h"
 
 namespace machiavelli {
-    const int tcp_port {1080};
+    const int tcp_port {1081};
     const string prompt {"machiavelli> "};
 }
 
@@ -44,8 +44,14 @@ void consume_command() // runs in its own thread
                 if(player->isHasTurn()) {
                     // TODO handle command here
                     if (g->isIsInSetup()) {
+                        int option;
                         try {
-                            stoi(command.get_cmd());
+                            option = stoi(command.get_cmd());
+                            if(g->isFirstCard()){
+                                g->pickCard(option, player);
+                            }else{
+                                g->removeCard(option, player);
+                            }
                         } catch (exception e) {
                             client->write("Not a valid option \r\n");
                         }
@@ -53,7 +59,7 @@ void consume_command() // runs in its own thread
                 }else{
                     client->write("It is not your turn yet! \r\n" + machiavelli::prompt);
                 }
-				*client << player->get_name() << ", you wrote: '" << command.get_cmd() << "', but I'll ignore that for now.\r\n" << machiavelli::prompt;
+				//*client << player->get_name() << ", you wrote: '" << command.get_cmd() << "', but I'll ignore that for now.\r\n" << machiavelli::prompt;
 			} catch (const exception& ex) {
 				cerr << "*** exception in consumer thread for player " << player->get_name() << ": " << ex.what() << '\n';
 

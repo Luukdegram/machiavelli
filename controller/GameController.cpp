@@ -7,6 +7,7 @@
 #include <memory>
 #include <algorithm>
 #include <fstream>
+#include <unistd.h>
 #include "GameController.h"
 #include "../models/CharacterCardFactory.h"
 
@@ -17,9 +18,11 @@ void GameController::init() {
     players[0]->setIsKing(true);
     players[1]->setGoldCoins(2);
 
+    firstCard = true;
+    secondCard = false;
     initBuildingCards();
     initCharacterCards();
-    playRandomCards();
+    //playRandomCards();
     setUpRound();
     //doNextTurn();
 }
@@ -59,7 +62,7 @@ vector<vector<string>> GameController::getNextLineAndSplitIntoTokens(const strin
 void GameController::initBuildingCards(){
     const string pathToBuildingCards {"/home/ronald/Documents/School/EIndopdrachtc++2/rescources/Bouwkaarten.csv"};
 
-    getNextLineAndSplitIntoTokens(pathToBuildingCards);
+    //getNextLineAndSplitIntoTokens(pathToBuildingCards);
 
     for(vector<string> line : getNextLineAndSplitIntoTokens(pathToBuildingCards)){
         if(line.size() < 4) {
@@ -94,7 +97,6 @@ shared_ptr<BuildingCard> GameController::getRandomBuildingCard(){
 }
 
 void GameController::playRandomCards(){
-    playRandomCharacterCards();
     playRandomBuildingCards();
 
     for(shared_ptr<Socket> client : sockets){
@@ -146,7 +148,7 @@ void GameController::doNextTurn(){
     shuffle(characterCards.begin(), characterCards.end(), dre);
     shuffle(buildingCards.begin(), buildingCards.end(), dre);
 
-    playRandomCharacterCards();
+    //playRandomCharacterCards();
 
     setNextKing();
 
@@ -240,40 +242,74 @@ void GameController::setUpRound(){
     }
     king->setHasTurn(true);
 
-    showAvailableCards(currentPlayer);
-//    while(availableCards.size() > 0) {
-//        currentPlayer->getClient()->clear_screen();
-//        currentPlayer->getClient()->write("Choose one of the cards below: \r\n");
-//        for (int i = 0; i < availableCards.size(); ++i) {
-//            currentPlayer->getClient()->write("[" + to_string(i) + "] " + availableCards[i]->getName() + "\r\n");
-//        }
-//        currentPlayer->getClient()->write("machiavelli> ");
-//
-//        if (availableCards.size() > 0) {
-//            if (currentPlayer == king) {
-//                currentPlayer = otherPlayer;
-//            } else {
-//                currentPlayer = king;
-//            }
-//        } else {
-//            //Start game
-//        }
-//    }
+    currentPlayer->getClient()->write("The top card is: " + availableCards[0]->getName() + "\r\n");
+    //currentPlayer->getClient()->write("You put the card on the table and ");
+    availableCards.erase(availableCards.begin());
+    sleep(3);
+    pickOneCardToKeep(currentPlayer);
 }
 
-vector<shared_ptr<CharacterCard>> GameController::pickCard(int index, shared_ptr<Player> player){
-
+void GameController::pickCard(int index, shared_ptr<Player> player){
+    if(index < availableCards.size() && index > -1) {
+        player->getCharacterCards().push_back(availableCards[index]);
+        availableCards.erase(availableCards.begin() + index);
+        if(availableCards.size() == 6){
+            goToNextPlayer();
+        }else {
+            pickOneCardToRemove(player);
+            setFirstCard(false);
+            setSecondCard(true);
+        }
+    }else{
+        player->getClient()->write("Not a valid card!\r\n");
+        sleep(2);
+        pickOneCardToKeep(player);
+    }
 }
 
-vector<shared_ptr<CharacterCard>> GameController::removeCard(int index, shared_ptr<Player> player){
-
+void GameController::removeCard(int index, shared_ptr<Player> player){
+    if(index < availableCards.size() && index > -1) {
+        availableCards.erase(availableCards.begin() + index);
+        goToNextPlayer();
+        if(availableCards.empty()){
+            playRandomCards();
+            cout << "Starting game";
+        }
+    }else{
+        player->getClient()->write("Not a valid card!\r\n");
+        sleep(2);
+        pickOneCardToRemove(player);
+    }
 }
 
-void GameController::showAvailableCards(shared_ptr<Player> currentPlayer){
+void GameController::pickOneCardToKeep(shared_ptr<Player> currentPlayer){
     currentPlayer->getClient()->clear_screen();
-    currentPlayer->getClient()->write("Choose one of the cards below: \r\n");
+    currentPlayer->getClient()->write("Choose one of the cards below to keep: \r\n");
     for (int i = 0; i < availableCards.size(); ++i) {
         currentPlayer->getClient()->write("[" + to_string(i) + "] " + availableCards[i]->getName() + "\r\n");
     }
     currentPlayer->getClient()->write("machiavelli> ");
+}
+
+void GameController::pickOneCardToRemove(shared_ptr<Player> currentPlayer){
+    currentPlayer->getClient()->clear_screen();
+    currentPlayer->getClient()->write("Choose one of the cards below to remove: \r\n");
+    for (int i = 0; i < availableCards.size(); ++i) {
+        currentPlayer->getClient()->write("[" + to_string(i) + "] " + availableCards[i]->getName() + "\r\n");
+    }
+    currentPlayer->getClient()->write("machiavelli> ");
+}
+
+void GameController::goToNextPlayer(){
+    for(shared_ptr<Player> p : players){
+        if(!p->isHasTurn()){
+            pickOneCardToKeep(p);
+            p->setHasTurn(true);
+        }else{
+            p->getClient()->write("Please wait...\r\n");
+            p->setHasTurn(false);
+        }
+    }
+    setFirstCard(true);
+    setSecondCard(false);
 }
