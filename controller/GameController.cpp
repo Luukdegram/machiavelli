@@ -224,7 +224,8 @@ void GameController::showGameUI(shared_ptr<Player> p, shared_ptr<CharacterCard> 
 }
 
 void GameController::setUpRound(){
-    vector<shared_ptr<CharacterCard>> availableCards = characterCards;
+    isInSetup = true;
+    availableCards = characterCards;
     shared_ptr<Player> king;
     shared_ptr<Player> otherPlayer;
     shared_ptr<Player> currentPlayer;
@@ -237,24 +238,42 @@ void GameController::setUpRound(){
             otherPlayer = p;
         }
     }
+    king->setHasTurn(true);
 
-    next:
+    showAvailableCards(currentPlayer);
+//    while(availableCards.size() > 0) {
+//        currentPlayer->getClient()->clear_screen();
+//        currentPlayer->getClient()->write("Choose one of the cards below: \r\n");
+//        for (int i = 0; i < availableCards.size(); ++i) {
+//            currentPlayer->getClient()->write("[" + to_string(i) + "] " + availableCards[i]->getName() + "\r\n");
+//        }
+//        currentPlayer->getClient()->write("machiavelli> ");
+//
+//        if (availableCards.size() > 0) {
+//            if (currentPlayer == king) {
+//                currentPlayer = otherPlayer;
+//            } else {
+//                currentPlayer = king;
+//            }
+//        } else {
+//            //Start game
+//        }
+//    }
+}
+
+vector<shared_ptr<CharacterCard>> GameController::pickCard(int index, shared_ptr<Player> player){
+
+}
+
+vector<shared_ptr<CharacterCard>> GameController::removeCard(int index, shared_ptr<Player> player){
+
+}
+
+void GameController::showAvailableCards(shared_ptr<Player> currentPlayer){
     currentPlayer->getClient()->clear_screen();
     currentPlayer->getClient()->write("Choose one of the cards below: \r\n");
     for (int i = 0; i < availableCards.size(); ++i) {
         currentPlayer->getClient()->write("[" + to_string(i) + "] " + availableCards[i]->getName() + "\r\n");
     }
     currentPlayer->getClient()->write("machiavelli> ");
-
-    if(availableCards.size() > 0){
-        if(currentPlayer == king){
-            currentPlayer = otherPlayer;
-        }else{
-            currentPlayer = king;
-        }
-        goto next;
-    }else{
-        //Start game
-    }
-
 }

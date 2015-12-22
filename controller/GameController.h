@@ -19,12 +19,15 @@ class GameController {
 private:
     std::vector<std::shared_ptr<BuildingCard>> buildingCards;
     std::vector<std::shared_ptr<CharacterCard>> characterCards;
+    std::vector<std::shared_ptr<CharacterCard>> availableCards;
     std::random_device dev;
     std::default_random_engine dre{dev()};
     std::vector<std::shared_ptr<Player>> players;
     int nextBuildingCard;
     int nextCharacterCard;
     std::vector<std::shared_ptr<Socket>> sockets;
+    bool isInSetup;
+    bool isPlaying;
 
 public:
     void init();
@@ -67,6 +70,29 @@ public:
     void showGameUI(std::shared_ptr<Player> p, std::shared_ptr<CharacterCard>);
 
     void setUpRound();
+
+
+    bool isIsInSetup() const {
+        return isInSetup;
+    }
+
+    void setIsInSetup(bool isInSetup) {
+        GameController::isInSetup = isInSetup;
+    }
+
+    bool isIsPlaying() const {
+        return isPlaying;
+    }
+
+    void setIsPlaying(bool isPlaying) {
+        GameController::isPlaying = isPlaying;
+    }
+
+    std::vector<std::shared_ptr<CharacterCard>> pickCard(int index, std::shared_ptr<Player> player);
+
+    std::vector<std::shared_ptr<CharacterCard>> removeCard(int index, std::shared_ptr<Player> player);
+
+    void showAvailableCards(std::shared_ptr<Player> currentPlayer);
 };
 
 

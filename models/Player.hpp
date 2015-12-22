@@ -31,6 +31,7 @@ private:
 	std::vector<std::shared_ptr<BuildingCard>> buildBuildings;
 	int goldCoins;
 	bool isKing;
+	bool hasTurn;
 
 public:
 	const std::string &getName() const {
@@ -84,6 +85,15 @@ public:
 
 	const std::shared_ptr<Socket> &getClient() const {
 		return client;
+	}
+
+
+	bool isHasTurn() const {
+		return hasTurn;
+	}
+
+	void setHasTurn(bool hasTurn) {
+		Player::hasTurn = hasTurn;
 	}
 };
 
