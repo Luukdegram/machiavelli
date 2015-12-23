@@ -31,7 +31,7 @@ private:
     bool isPlaying;
     bool firstCard;
     bool secondCard;
-
+    int goldCoins;
 public:
     void init();
 
@@ -122,9 +122,20 @@ public:
 
     void doTurn();
 
-    bool playerHasEightBuildings(std::shared_ptr<Player>);
-
     void calculatePoints(std::shared_ptr<Player> p);
+
+
+    int getGoldCoins() const {
+        return goldCoins;
+    }
+
+    void setGoldCoins(int goldCoins) {
+        GameController::goldCoins = goldCoins;
+    }
+
+    void addCoins(std::shared_ptr<Player> p, int amount);
+
+    void getTwoBuildingCardsAndPutOneBack(std::shared_ptr<Player> p);
 };
 
 

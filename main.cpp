@@ -55,6 +55,32 @@ void consume_command() // runs in its own thread
                         } catch (exception e) {
                             client->write("Not a valid option \r\n");
                         }
+                    }else{
+                        int option;
+                        try{
+                            option = stoi(command.get_cmd());
+                            if(option <= 5){
+                                switch(option){
+                                    case 0 :
+
+                                        break;
+                                    case 1 :
+                                        g->addCoins(player, 2);
+                                        //g->goToNextCard();
+                                        break;
+                                    case 2 :
+                                        g->getTwoBuildingCardsAndPutOneBack(player);
+                                        //g->goToNextCard();
+                                        break;
+                                    case 4 :
+                                        break;
+                                }
+                            }else{
+                                client->write("Not a valid option");
+                            }
+                        }catch (exception e){
+                            client->write("Not a valid command");
+                        }
                     }
                 }else{
                     client->write("It is not your turn yet! \r\n" + machiavelli::prompt);

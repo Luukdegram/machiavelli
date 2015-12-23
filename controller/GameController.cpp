@@ -289,6 +289,8 @@ void GameController::removeCard(int index, shared_ptr<Player> player){
         if(availableCards.empty()){
             playRandomCards();
             doTurn();
+            setIsInSetup(false);
+            setIsPlaying(true);
             cout << "Starting game";
         }
     }else{
@@ -331,11 +333,6 @@ void GameController::showAvailableCards(std::shared_ptr<Player> currentPlayer) {
     currentPlayer->getClient()->write("machiavelli> ");
 }
 
-//CALCULATE POINTS
-bool GameController::playerHasEightBuildings(shared_ptr<Player> p){
-    return (p->getBuildBuildings().size() >= 8);
-}
-
 void GameController::calculatePoints(shared_ptr<Player> p){
     vector<BuildingColor> colors = buildingColors;
     int points = 0;
@@ -362,4 +359,18 @@ void GameController::calculatePoints(shared_ptr<Player> p){
     }
 
     p->setPoints(points);
+}
+
+void GameController::addCoins(shared_ptr<Player> p, int amount){
+ //   if((goldCoins -= amount) <= 0) {            //Is there game limit of 30 in game coins???
+        setGoldCoins(goldCoins -= amount);
+        p->setGoldCoins(amount);
+  //  }
+
+}
+
+void GameController::getTwoBuildingCardsAndPutOneBack(shared_ptr<Player> p){
+    vector<shared_ptr<BuildingCard>> cardsToGet(buildingCards.end() - 2, buildingCards.end());
+    buildingCards.erase(buildingCards.end() - 2, buildingCards.end());
+
 }
