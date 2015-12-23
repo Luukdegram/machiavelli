@@ -20,11 +20,16 @@ void GameController::init() {
 
     firstCard = true;
     secondCard = false;
+    buildingColors.push_back(BuildingColor::YELLOW);
+    buildingColors.push_back(BuildingColor::GREEN);
+    buildingColors.push_back(BuildingColor::RED);
+    buildingColors.push_back(BuildingColor::GREEN);
+    buildingColors.push_back(BuildingColor::LILA);
     initBuildingCards();
     initCharacterCards();
     //playRandomCards();
-    setUpRound();
-    //doNextTurn();
+    //setUpRound();
+    doNextTurn();
 }
 
 void GameController::readCardsFromFile() {
@@ -131,15 +136,8 @@ void GameController::playRandomBuildingCards(){
 void GameController::doNextTurn(){
 
     for(shared_ptr<Socket> client : sockets){
-        client->write("Starting next turn!\r\n");
+        client->write("Starting turn!\r\n");
     }
-
-    for(shared_ptr<Player> p : players){
-        showUI(p);
-    }
-
-    nextBuildingCard = 0;
-    nextCharacterCard = 0;
 
     for(shared_ptr<Player> player : players){
         player->getCharacterCards().clear();
@@ -148,7 +146,7 @@ void GameController::doNextTurn(){
     shuffle(characterCards.begin(), characterCards.end(), dre);
     shuffle(buildingCards.begin(), buildingCards.end(), dre);
 
-    //playRandomCharacterCards();
+    setUpRound();
 
     setNextKing();
 
@@ -156,6 +154,23 @@ void GameController::doNextTurn(){
         for(shared_ptr<Player> player : players){
             if(find(player->getCharacterCards().begin(), player->getCharacterCards().end(), cc) != player->getCharacterCards().end()){
                 doPlayerTurn(player, cc);
+            }
+        }
+    }
+}
+
+void GameController::doTurn(){
+    for(shared_ptr<Socket> client : sockets){
+        client->clear_screen();
+        client->write("Starting turn!\r\n");
+        client->write("Calling characters now...\r\n");
+    }
+
+    for(shared_ptr<CharacterCard> cc : characterCards){
+        for(shared_ptr<Player> player : players){
+            if(find(player->getCharacterCards().begin(), player->getCharacterCards().end(), cc) != player->getCharacterCards().end()){
+                doPlayerTurn(player, cc);
+                return;
             }
         }
     }
@@ -241,7 +256,7 @@ void GameController::setUpRound(){
         }
     }
     king->setHasTurn(true);
-
+    currentPlayer->getClient()->clear_screen();
     currentPlayer->getClient()->write("The top card is: " + availableCards[0]->getName() + "\r\n");
     //currentPlayer->getClient()->write("You put the card on the table and ");
     availableCards.erase(availableCards.begin());
@@ -273,6 +288,7 @@ void GameController::removeCard(int index, shared_ptr<Player> player){
         goToNextPlayer();
         if(availableCards.empty()){
             playRandomCards();
+            doTurn();
             cout << "Starting game";
         }
     }else{
@@ -285,19 +301,13 @@ void GameController::removeCard(int index, shared_ptr<Player> player){
 void GameController::pickOneCardToKeep(shared_ptr<Player> currentPlayer){
     currentPlayer->getClient()->clear_screen();
     currentPlayer->getClient()->write("Choose one of the cards below to keep: \r\n");
-    for (int i = 0; i < availableCards.size(); ++i) {
-        currentPlayer->getClient()->write("[" + to_string(i) + "] " + availableCards[i]->getName() + "\r\n");
-    }
-    currentPlayer->getClient()->write("machiavelli> ");
+    showAvailableCards(currentPlayer);
 }
 
 void GameController::pickOneCardToRemove(shared_ptr<Player> currentPlayer){
     currentPlayer->getClient()->clear_screen();
     currentPlayer->getClient()->write("Choose one of the cards below to remove: \r\n");
-    for (int i = 0; i < availableCards.size(); ++i) {
-        currentPlayer->getClient()->write("[" + to_string(i) + "] " + availableCards[i]->getName() + "\r\n");
-    }
-    currentPlayer->getClient()->write("machiavelli> ");
+    showAvailableCards(currentPlayer);
 }
 
 void GameController::goToNextPlayer(){
@@ -312,4 +322,44 @@ void GameController::goToNextPlayer(){
     }
     setFirstCard(true);
     setSecondCard(false);
+}
+
+void GameController::showAvailableCards(std::shared_ptr<Player> currentPlayer) {
+    for (int i = 0; i < availableCards.size(); ++i) {
+        currentPlayer->getClient()->write("[" + to_string(i) + "] " + availableCards[i]->getName() + "\r\n");
+    }
+    currentPlayer->getClient()->write("machiavelli> ");
+}
+
+//CALCULATE POINTS
+bool GameController::playerHasEightBuildings(shared_ptr<Player> p){
+    return (p->getBuildBuildings().size() >= 8);
+}
+
+void GameController::calculatePoints(shared_ptr<Player> p){
+    vector<BuildingColor> colors = buildingColors;
+    int points = 0;
+    for(shared_ptr<BuildingCard> bb : p->getBuildBuildings()){
+        points += bb->getValue();
+
+        for(BuildingColor color : colors){
+            if(bb->getColor() == color){
+                colors.erase(remove(colors.begin(), colors.end(), color), colors.end());
+            }
+        }
+    }
+
+    if(p->getBuildBuildings().size() >= 8){
+        points += 2;
+    }
+
+    if(colors.empty()){
+        points += 3;
+    }
+
+    if(p->isFirstToFinish()){
+        points += 4;
+    }
+
+    p->setPoints(points);
 }

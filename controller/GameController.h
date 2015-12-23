@@ -20,6 +20,7 @@ private:
     std::vector<std::shared_ptr<BuildingCard>> buildingCards;
     std::vector<std::shared_ptr<CharacterCard>> characterCards;
     std::vector<std::shared_ptr<CharacterCard>> availableCards;
+    std::vector<BuildingColor> buildingColors;
     std::random_device dev;
     std::default_random_engine dre{dev()};
     std::vector<std::shared_ptr<Player>> players;
@@ -118,6 +119,12 @@ public:
     }
 
     void goToNextPlayer();
+
+    void doTurn();
+
+    bool playerHasEightBuildings(std::shared_ptr<Player>);
+
+    void calculatePoints(std::shared_ptr<Player> p);
 };
 
 

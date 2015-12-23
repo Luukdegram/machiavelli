@@ -31,8 +31,9 @@ private:
 	std::vector<std::shared_ptr<BuildingCard>> buildBuildings;
 	int goldCoins;
 	bool isKing;
+	bool firstToFinish;
 	bool hasTurn;
-
+	int points;
 public:
 	const std::string &getName() const {
 		return name;
@@ -94,6 +95,23 @@ public:
 
 	void setHasTurn(bool hasTurn) {
 		Player::hasTurn = hasTurn;
+	}
+
+	int getPoints() const {
+		return points;
+	}
+
+	void setPoints(int points) {
+		Player::points = points;
+	}
+
+
+	bool isFirstToFinish() const {
+		return firstToFinish;
+	}
+
+	void setFirstToFinish(bool firstToFinish) {
+		Player::firstToFinish = firstToFinish;
 	}
 };
 
