@@ -157,6 +157,8 @@ public:
     void removePlayer(std::shared_ptr<Player> player);
 
     void getOpponentDetails(std::shared_ptr<Player> player);
+
+    void showOverview(std::shared_ptr<Player> player);
 };
 
 

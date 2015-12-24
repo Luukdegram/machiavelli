@@ -63,6 +63,9 @@ void CommandHandler::handleCommandInGame(ClientCommand command){
                     break;
                 case 3 :
                     break;
+                case 4 :
+                    gameController->showOverview(player);
+                    break;
             }
         }else{
             client->write("Not a valid option");

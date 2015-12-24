@@ -436,3 +436,23 @@ void GameController::getOpponentDetails(std::shared_ptr<Player> player) {
         }
     }
 }
+
+void GameController::showOverview(std::shared_ptr<Player> player) {
+    shared_ptr<Socket> client = player->getClient();
+
+    client->write("Verloop van het spel: \r\n");
+    client->write("Inkomsten: Neem 2 goudstukken of neem 2 kaarten en leg er 1 af. \r\n");
+    client->write("Bouwen: Leg één bouwkaart neer en betaal de waarden. \r\n");
+
+    client->write("\r\n Karakter kaarten: \r\n");
+
+    // print all cards
+    client->write("Moordenaar: Vermoord een andere karakter. \r\n");
+    client->write("Dief: Steelt van een andere speler. \r\n");
+    client->write("Magiër: Ruilt bouwkaarten om. \r\n");
+    client->write("Koning: Begint de volgende beurt; Ontvangt van monumenten. \r\n");
+    client->write("Prediker: Is beschermd tegen de Condottiere; Ontvangt van kerkelijke gebouwen. \r\n");
+    client->write("Koopman: Ontvangt één extra goudstuk; Ontvangt van commerciële gebouwen. \r\n");
+    client->write("Bouwmeester: Trekt twee extra kaarten; Mag drie gebouwen gebouwen. \r\n");
+    client->write("Condottiere: Vernietigt een gebouw; Ontvangt van alle militaire gebouwen. \r\n");
+}
