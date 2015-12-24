@@ -20,6 +20,12 @@ void GameController::init() {
 
     firstCard = true;
     secondCard = false;
+
+    // Clear all cards incase game restarted
+    buildingColors.clear();
+    buildingCards.clear();
+    characterCards.clear();
+
     buildingColors.push_back(BuildingColor::YELLOW);
     buildingColors.push_back(BuildingColor::GREEN);
     buildingColors.push_back(BuildingColor::RED);
@@ -65,7 +71,7 @@ vector<vector<string>> GameController::getNextLineAndSplitIntoTokens(const strin
 }
 
 void GameController::initBuildingCards(){
-    const string pathToBuildingCards {"/home/ronald/Documents/School/EIndopdrachtc++2/rescources/Bouwkaarten.csv"};
+    const string pathToBuildingCards {"rescources/Bouwkaarten.csv"};
 
     //getNextLineAndSplitIntoTokens(pathToBuildingCards);
 
@@ -81,7 +87,7 @@ void GameController::initBuildingCards(){
 }
 
 void GameController::initCharacterCards(){
-    const string pathToCharacterCards {"/home/ronald/Documents/School/EIndopdrachtc++2/rescources/karakterkaarten.csv"};
+    const string pathToCharacterCards {"rescources/karakterkaarten.csv"};
 
     for(vector<string> line : getNextLineAndSplitIntoTokens(pathToCharacterCards)){
        // characterCards.push_back(shared_ptr<CharacterCard>(new CharacterCard(stoi(line[0]), line[1])));
@@ -409,4 +415,9 @@ void GameController::getNextCharacterCard(){
             break;
         }
     }
+}
+
+void GameController::removePlayer(std::shared_ptr<Player> player) {
+    sockets.erase(find(sockets.begin(), sockets.end(), player->getClient()));
+    players.erase(find(players.begin(), players.end(), player));
 }

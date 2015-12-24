@@ -153,6 +153,8 @@ public:
     void getNextCharacterCard();
 
     void goToNextPlayerInGame();
+
+    void removePlayer(std::shared_ptr<Player> player);
 };
 
 

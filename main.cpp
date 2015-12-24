@@ -78,6 +78,7 @@ void handle_client(shared_ptr<Socket> client) // this function runs in a separat
 		*client << "Welcome, " << name << ", have fun playing our game!\r\n" << machiavelli::prompt;
         g->getSockets().push_back(client);
         //Initialize the game when there are enough players
+
         if(g->getPlayers().size() == 2){
             g->init();
         }
@@ -91,11 +92,6 @@ void handle_client(shared_ptr<Socket> client) // this function runs in a separat
 
                     if (cmd == "quit") {
                         client->write("Bye!\r\n");
-//                        for(shared_ptr<Player> p : g->getPlayers()){
-//                            if(p->getClient() == client){
-//
-//                            }
-//                        }
                         break;
                     }
 
@@ -117,7 +113,16 @@ void handle_client(shared_ptr<Socket> client) // this function runs in a separat
 				}
             }
         }
-		if (client->is_open()) client->close();
+		if (client->is_open()) {
+            client->close();
+
+            string name = player->get_name();
+            g->removePlayer(player);
+
+            for(shared_ptr<Player> player : g->getPlayers()) {
+                *player->getClient() << name << " has left the game. Please wait for a new player to join.";
+            }
+        }
 	} catch (...) {
         cerr << "handle_client crashed\n";
     }
