@@ -285,11 +285,11 @@ void GameController::removeCard(int index, shared_ptr<Player> player){
         availableCards.erase(availableCards.begin() + index);
         goToNextPlayerInSetup();
         if(availableCards.empty()){
-            playRandomCards();
-            doTurn();
             setIsInSetup(false);
             setIsPlaying(true);
             setFirstTurn(true);
+            playRandomCards();
+            doTurn();
         }
     }else{
         player->getClient()->write("Not a valid card!\r\n");
