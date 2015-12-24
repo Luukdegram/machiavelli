@@ -120,7 +120,8 @@ void handle_client(shared_ptr<Socket> client) // this function runs in a separat
             g->removePlayer(player);
 
             for(shared_ptr<Player> player : g->getPlayers()) {
-                *player->getClient() << name << " has left the game. Please wait for a new player to join.";
+                *player->getClient() << name << " has left the game. Please wait for a new player to join. \n";
+                *player->getClient() << machiavelli::prompt;
             }
         }
 	} catch (...) {

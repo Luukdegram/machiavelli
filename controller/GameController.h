@@ -155,6 +155,8 @@ public:
     void goToNextPlayerInGame();
 
     void removePlayer(std::shared_ptr<Player> player);
+
+    void getOpponentDetails(std::shared_ptr<Player> player);
 };
 
 

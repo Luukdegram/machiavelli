@@ -51,7 +51,7 @@ void CommandHandler::handleCommandInGame(ClientCommand command){
         if(option <= 5){
             switch(option){
                 case 0 :
-
+                    gameController->getOpponentDetails(player);
                     break;
                 case 1 :
                     gameController->addCoins(player, 2);

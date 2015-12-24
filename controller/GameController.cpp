@@ -239,7 +239,7 @@ void GameController::showGameUI(shared_ptr<Player> p, shared_ptr<CharacterCard> 
     p->getClient()->write("[0] Look at the amount of gold and the buildings of the opponent first.\r\n");
     p->getClient()->write("[1] Take two gold coins.\r\n");
     p->getClient()->write("[2] Take two building cards and put one back.\r\n");
-    p->getClient()->write("[3] Use your special abbility: .\r\n");
+    p->getClient()->write("[3] Use your special ability: .\r\n");
     p->getClient()->write("[4] Show help.\r\n");
     p->getClient()->write("machiavelli> ");
 }
@@ -385,11 +385,8 @@ void GameController::addCoins(shared_ptr<Player> p, int amount){
 }
 
 void GameController::getTwoBuildingCardsAndPutOneBack(shared_ptr<Player> p){
-    vector<shared_ptr<BuildingCard>> cardsToGet(buildingCards.end() - 2, buildingCards.end());
     buildingCards.erase(buildingCards.end() - 2, buildingCards.end());
-
     p->getClient()->clear_screen();
-    //for
 }
 
 void GameController::getNextCharacterCard(){
@@ -420,4 +417,22 @@ void GameController::getNextCharacterCard(){
 void GameController::removePlayer(std::shared_ptr<Player> player) {
     sockets.erase(find(sockets.begin(), sockets.end(), player->getClient()));
     players.erase(find(players.begin(), players.end(), player));
+}
+
+void GameController::getOpponentDetails(std::shared_ptr<Player> player) {
+    shared_ptr<Socket> client = player->getClient();
+    for(shared_ptr<Player> current : players) {
+        if(current != player) {
+            client->write("Player " + current->get_name() + " has: \r\n ");
+            client->write(current->getGoldCoins() + " coins \r\n");
+
+            if(current->getBuildBuildings().size() > 0) {
+                client->write("The player also has the following buildings: \r\n");
+
+                for(shared_ptr<BuildingCard> card : current->getBuildBuildings()) {
+                    client->write(card->getName() + "\r\n");
+                }
+            }
+        }
+    }
 }
