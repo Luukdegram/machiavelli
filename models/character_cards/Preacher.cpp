@@ -3,3 +3,19 @@
 //
 
 #include "Preacher.h"
+using namespace std;
+
+void Preacher::countBlueBuildings(std::shared_ptr<Player> player) {
+    int extraCoins = 0;
+    for(shared_ptr<BuildingCard> card : player->getBuildBuildings()) {
+        if (card->getColor() == BuildingColor::BLUE) {
+            extraCoins ++;
+        }
+    }
+
+    player->setGoldCoins(player->getGoldCoins() + extraCoins);
+}
+
+void Preacher::doSpecialAbility(std::shared_ptr<Player> player, std::string string) {
+    countBlueBuildings(player);
+}
