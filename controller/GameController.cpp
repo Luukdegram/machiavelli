@@ -373,4 +373,6 @@ void GameController::getTwoBuildingCardsAndPutOneBack(shared_ptr<Player> p){
     vector<shared_ptr<BuildingCard>> cardsToGet(buildingCards.end() - 2, buildingCards.end());
     buildingCards.erase(buildingCards.end() - 2, buildingCards.end());
 
+    p->getClient()->clear_screen();
+    //for
 }

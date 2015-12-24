@@ -14,6 +14,7 @@
 #include "../models/CharacterCard.h"
 #include "../models/Player.hpp"
 #include "../lib/Socket.h"
+#include "../lib/ClientCommand.h"
 
 class GameController {
 private:
@@ -136,6 +137,8 @@ public:
     void addCoins(std::shared_ptr<Player> p, int amount);
 
     void getTwoBuildingCardsAndPutOneBack(std::shared_ptr<Player> p);
+
+    void handleCommand(ClientCommand command);
 };
 
 

@@ -22,6 +22,7 @@ using namespace std;
 #include "lib/ClientCommand.h"
 #include "models/Player.hpp"
 #include "controller/GameController.h"
+#include "controller/CommandHandler.h"
 
 namespace machiavelli {
     const int tcp_port {1081};
@@ -29,7 +30,8 @@ namespace machiavelli {
 }
 
 //TODO put the server stuff in a seperate class
-unique_ptr<GameController> g(new GameController);
+shared_ptr<GameController>g(new GameController);
+unique_ptr<CommandHandler> commandHandler(new CommandHandler(g));
 static Sync_queue<ClientCommand> queue;
 
 void consume_command() // runs in its own thread
@@ -41,50 +43,7 @@ void consume_command() // runs in its own thread
 			shared_ptr<Player> player {command.get_player()};
 
 			try {
-                if(player->isHasTurn()) {
-                    // TODO handle command here
-                    if (g->isIsInSetup()) {
-                        int option;
-                        try {
-                            option = stoi(command.get_cmd());
-                            if(g->isFirstCard()){
-                                g->pickCard(option, player);
-                            }else{
-                                g->removeCard(option, player);
-                            }
-                        } catch (exception e) {
-                            client->write("Not a valid option \r\n");
-                        }
-                    }else{
-                        int option;
-                        try{
-                            option = stoi(command.get_cmd());
-                            if(option <= 5){
-                                switch(option){
-                                    case 0 :
-
-                                        break;
-                                    case 1 :
-                                        g->addCoins(player, 2);
-                                        //g->goToNextCard();
-                                        break;
-                                    case 2 :
-                                        g->getTwoBuildingCardsAndPutOneBack(player);
-                                        //g->goToNextCard();
-                                        break;
-                                    case 4 :
-                                        break;
-                                }
-                            }else{
-                                client->write("Not a valid option");
-                            }
-                        }catch (exception e){
-                            client->write("Not a valid command");
-                        }
-                    }
-                }else{
-                    client->write("It is not your turn yet! \r\n" + machiavelli::prompt);
-                }
+                commandHandler->handleCommand(command);
 				//*client << player->get_name() << ", you wrote: '" << command.get_cmd() << "', but I'll ignore that for now.\r\n" << machiavelli::prompt;
 			} catch (const exception& ex) {
 				cerr << "*** exception in consumer thread for player " << player->get_name() << ": " << ex.what() << '\n';
