@@ -61,7 +61,7 @@ void CommandHandler::handleCommandInGame(ClientCommand command){
                     gameController->getTwoBuildingCardsAndPutOneBack(player);
                     //g->goToNextCard();
                     break;
-                case 4 :
+                case 3 :
                     break;
             }
         }else{

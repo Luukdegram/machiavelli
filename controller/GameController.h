@@ -31,6 +31,7 @@ private:
     bool isInSetup;
     bool isPlaying;
     bool firstCard;
+    bool firstTurn;
     bool secondCard;
     int goldCoins;
 public:
@@ -119,7 +120,7 @@ public:
         GameController::secondCard = secondCard;
     }
 
-    void goToNextPlayer();
+    void goToNextPlayerInSetup();
 
     void doTurn();
 
@@ -134,11 +135,24 @@ public:
         GameController::goldCoins = goldCoins;
     }
 
+
+    bool isFirstTurn() const {
+        return firstTurn;
+    }
+
+    void setFirstTurn(bool firstTurn) {
+        GameController::firstTurn = firstTurn;
+    }
+
     void addCoins(std::shared_ptr<Player> p, int amount);
 
     void getTwoBuildingCardsAndPutOneBack(std::shared_ptr<Player> p);
 
     void handleCommand(ClientCommand command);
+
+    void getNextCharacterCard();
+
+    void goToNextPlayerInGame();
 };
 
 

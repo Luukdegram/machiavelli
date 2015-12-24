@@ -135,6 +135,7 @@ void GameController::playRandomBuildingCards(){
 
 void GameController::doNextTurn(){
 
+    nextCharacterCard = 0;
     for(shared_ptr<Socket> client : sockets){
         client->write("Starting turn!\r\n");
     }
@@ -150,13 +151,13 @@ void GameController::doNextTurn(){
 
     setNextKing();
 
-    for(shared_ptr<CharacterCard> cc : characterCards){
-        for(shared_ptr<Player> player : players){
-            if(find(player->getCharacterCards().begin(), player->getCharacterCards().end(), cc) != player->getCharacterCards().end()){
-                doPlayerTurn(player, cc);
-            }
-        }
-    }
+//    for(shared_ptr<CharacterCard> cc : characterCards){
+//        for(shared_ptr<Player> player : players){
+//            if(find(player->getCharacterCards().begin(), player->getCharacterCards().end(), cc) != player->getCharacterCards().end()){
+//                doPlayerTurn(player, cc);
+//            }
+//        }
+//    }
 }
 
 void GameController::doTurn(){
@@ -166,13 +167,10 @@ void GameController::doTurn(){
         client->write("Calling characters now...\r\n");
     }
 
-    for(shared_ptr<CharacterCard> cc : characterCards){
-        for(shared_ptr<Player> player : players){
-            if(find(player->getCharacterCards().begin(), player->getCharacterCards().end(), cc) != player->getCharacterCards().end()){
-                doPlayerTurn(player, cc);
-                return;
-            }
-        }
+    if(nextCharacterCard < 8) {
+        getNextCharacterCard();
+    }else{
+        doNextTurn();
     }
 }
 
@@ -269,7 +267,7 @@ void GameController::pickCard(int index, shared_ptr<Player> player){
         player->getCharacterCards().push_back(availableCards[index]);
         availableCards.erase(availableCards.begin() + index);
         if(availableCards.size() == 6){
-            goToNextPlayer();
+            goToNextPlayerInSetup();
         }else {
             pickOneCardToRemove(player);
             setFirstCard(false);
@@ -285,13 +283,13 @@ void GameController::pickCard(int index, shared_ptr<Player> player){
 void GameController::removeCard(int index, shared_ptr<Player> player){
     if(index < availableCards.size() && index > -1) {
         availableCards.erase(availableCards.begin() + index);
-        goToNextPlayer();
+        goToNextPlayerInSetup();
         if(availableCards.empty()){
             playRandomCards();
             doTurn();
             setIsInSetup(false);
             setIsPlaying(true);
-            cout << "Starting game";
+            setFirstTurn(true);
         }
     }else{
         player->getClient()->write("Not a valid card!\r\n");
@@ -312,7 +310,7 @@ void GameController::pickOneCardToRemove(shared_ptr<Player> currentPlayer){
     showAvailableCards(currentPlayer);
 }
 
-void GameController::goToNextPlayer(){
+void GameController::goToNextPlayerInSetup(){
     for(shared_ptr<Player> p : players){
         if(!p->isHasTurn()){
             pickOneCardToKeep(p);
@@ -324,6 +322,17 @@ void GameController::goToNextPlayer(){
     }
     setFirstCard(true);
     setSecondCard(false);
+}
+
+void GameController::goToNextPlayerInGame(){
+    for(shared_ptr<Player> p : players){
+        if(!p->isHasTurn()){
+            p->setHasTurn(true);
+        }else{
+            p->getClient()->write("Please wait...\r\n");
+            p->setHasTurn(false);
+        }
+    }
 }
 
 void GameController::showAvailableCards(std::shared_ptr<Player> currentPlayer) {
@@ -375,4 +384,29 @@ void GameController::getTwoBuildingCardsAndPutOneBack(shared_ptr<Player> p){
 
     p->getClient()->clear_screen();
     //for
+}
+
+void GameController::getNextCharacterCard(){
+
+    if(nextCharacterCard < 7) {
+        shared_ptr<CharacterCard> cc = characterCards[nextCharacterCard];
+
+        for (shared_ptr<Player> p : players) {
+            if (find(p->getCharacterCards().begin(), p->getCharacterCards().end(), cc) !=
+                p->getCharacterCards().end()) {
+                if (isFirstTurn()) {
+                    p->setHasTurn(true);
+                    setFirstTurn(false);
+                } else {
+                    goToNextPlayerInGame();
+                }
+                doPlayerTurn(p, cc);
+                nextCharacterCard++;
+            } else {
+                nextCharacterCard++;
+                getNextCharacterCard();
+            }
+            break;
+        }
+    }
 }
