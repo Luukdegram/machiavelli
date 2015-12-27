@@ -48,7 +48,6 @@ void CommandHandler::handleCommandInGame(ClientCommand command){
     int option;
     try{
         option = stoi(command.get_cmd());
-        if(option <= 5){
             switch(option){
                 case 0 :
                     gameController->getOpponentDetails(player);
@@ -56,6 +55,8 @@ void CommandHandler::handleCommandInGame(ClientCommand command){
                 case 1 :
                     gameController->addCoins(player, 2);
                     gameController->goToNextPlayerInGame();
+              //      gameController->getNextCharacterCard();
+                    //g->goToNextCard();
                     break;
                 case 2 :
                     gameController->getTwoBuildingCardsAndPutOneBack(player);
@@ -63,13 +64,15 @@ void CommandHandler::handleCommandInGame(ClientCommand command){
                     break;
                 case 3 :
                     break;
+<<<<<<< Updated upstream
                 case 4 :
                     gameController->showOverview(player);
+=======
+                default:
+                    client->write("Not a valid option!");
+>>>>>>> Stashed changes
                     break;
             }
-        }else{
-            client->write("Not a valid option");
-        }
     }catch (exception e){
         client->write("Not a valid command");
     }
