@@ -55,11 +55,11 @@ void CommandHandler::handleCommandInGame(ClientCommand command){
                     break;
                 case 1 :
                     gameController->addCoins(player, 2);
-                    //g->goToNextCard();
+                    gameController->goToNextPlayerInGame();
                     break;
                 case 2 :
                     gameController->getTwoBuildingCardsAndPutOneBack(player);
-                    //g->goToNextCard();
+                    gameController->goToNextPlayerInGame();
                     break;
                 case 3 :
                     break;

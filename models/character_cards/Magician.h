@@ -12,6 +12,9 @@ class Magician : public CharacterCard {
 
 public:
     Magician(int value, const std::string &name) : CharacterCard(value, name) { }
+
+    void doSpecialAbility(std::shared_ptr<Player> player, std::string command);
+    void handleSpecialAbility(std::shared_ptr<Player> player, std::string command);
 };
 
 
