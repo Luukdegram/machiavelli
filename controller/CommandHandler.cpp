@@ -64,13 +64,10 @@ void CommandHandler::handleCommandInGame(ClientCommand command){
                     break;
                 case 3 :
                     break;
-<<<<<<< Updated upstream
                 case 4 :
                     gameController->showOverview(player);
-=======
                 default:
                     client->write("Not a valid option!");
->>>>>>> Stashed changes
                     break;
             }
     }catch (exception e){
