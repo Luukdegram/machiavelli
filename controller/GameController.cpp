@@ -330,13 +330,21 @@ void GameController::goToNextPlayerInSetup(){
     setSecondCard(false);
 }
 
-void GameController::goToNextPlayerInGame(){
-    for(shared_ptr<Player> p : players){
-        if(!p->isHasTurn()){
-            p->setHasTurn(true);
+void GameController::goToNextPlayerInGame(shared_ptr<Player> p){
+//    for(shared_ptr<Player> p : players){
+//        if(!p->isHasTurn()){
+//            p->setHasTurn(true);
+//        }else{
+//            p->getClient()->write("Please wait...\r\n");
+//            p->setHasTurn(false);
+//        }
+//    }
+
+    for(shared_ptr<Player> player : players){
+        if(player == p){
+            player->setHasTurn(true);
         }else{
-            p->getClient()->write("Please wait...\r\n");
-            p->setHasTurn(false);
+            player->setHasTurn(false);
         }
     }
 }
@@ -379,7 +387,7 @@ void GameController::calculatePoints(shared_ptr<Player> p){
 void GameController::addCoins(shared_ptr<Player> p, int amount){
  //   if((goldCoins -= amount) <= 0) {            //Is there game limit of 30 in game coins???
         setGoldCoins(goldCoins -= amount);
-        p->setGoldCoins(amount);
+        p->setGoldCoins(p->getGoldCoins() + amount);
   //  }
 
 }
@@ -391,26 +399,32 @@ void GameController::getTwoBuildingCardsAndPutOneBack(shared_ptr<Player> p){
 
 void GameController::getNextCharacterCard(){
 
-    if(nextCharacterCard < 7) {
+    if(nextCharacterCard <= 7) {
         shared_ptr<CharacterCard> cc = characterCards[nextCharacterCard];
 
-        for (shared_ptr<Player> p : players) {
+        for (int i = 0; i < players.size(); i++) {
+            shared_ptr<Player> p = players[i];
             if (find(p->getCharacterCards().begin(), p->getCharacterCards().end(), cc) !=
                 p->getCharacterCards().end()) {
                 if (isFirstTurn()) {
                     p->setHasTurn(true);
                     setFirstTurn(false);
                 } else {
-                    goToNextPlayerInGame();
+                    goToNextPlayerInGame(p);
                 }
                 doPlayerTurn(p, cc);
                 nextCharacterCard++;
-            } else {
+                break;
+            }
+
+            if(i == 1){
                 nextCharacterCard++;
                 getNextCharacterCard();
             }
-            break;
         }
+    }
+    else{
+        cout << "not";
     }
 }
 
