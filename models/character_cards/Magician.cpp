@@ -7,11 +7,11 @@
 
 using namespace std;
 
-void Magician::doSpecialAbility(std::shared_ptr<Player> player, std::string command) {
-    handleSpecialAbility(player, command);
+void Magician::doSpecialAbility(std::shared_ptr<Player> player, std::string command, shared_ptr<GameController> gameController) {
+    handleSpecialAbility(player, command, gameController);
 }
 
-void Magician::handleSpecialAbility(std::shared_ptr<Player> player, std::string command) {
+void Magician::handleSpecialAbility(std::shared_ptr<Player> player, std::string command, shared_ptr<GameController> gameController) {
     shared_ptr<Socket> client = player->getClient();
 
     client->write("Please select an option: \r\n");
@@ -21,7 +21,9 @@ void Magician::handleSpecialAbility(std::shared_ptr<Player> player, std::string 
     int option = stoi(string{client->readline()});
 
     if(option == 0) {
-        //TODO: Need access to gamecontroller for opponent's cards
+        vector<shared_ptr<CharacterCard>> tempCards = player->getCharacterCards();
+        player->setCharacterCards(gameController->getOpponent(player)->getCharacterCards());
+        gameController->getOpponent(player)->setCharacterCards(tempCards);
     }else if(option == 1) {
         client->write("How many cards would you like to swap for building cards? \n");
         int amount = stoi(string{client->readline()});
@@ -30,10 +32,12 @@ void Magician::handleSpecialAbility(std::shared_ptr<Player> player, std::string 
             amount = player->getCharacterCards().size();
         }
 
-        //TODO: Need access to gamecontroller for building cards
+        for(int i = 0; i < amount; i ++) {
+            player->getBuildingCards().push_back(gameController->getRandomBuildingCard());
+        }
     } else {
         client->write("Invalid option, try again. \r\n");
-        handleSpecialAbility(player, command);
+        handleSpecialAbility(player, command, gameController);
     }
 
 }

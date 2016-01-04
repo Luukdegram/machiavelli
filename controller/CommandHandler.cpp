@@ -54,16 +54,15 @@ void CommandHandler::handleCommandInGame(ClientCommand command){
                     break;
                 case 1 :
                     gameController->addCoins(player, 2);
-              //      gameController->goToNextPlayerInGame();
                     gameController->getNextCharacterCard();
-                    //g->goToNextCard();
                     break;
                 case 2 :
                     gameController->getTwoBuildingCardsAndPutOneBack(player);
-                    //gameController->goToNextPlayerInGame();
                     gameController->getNextCharacterCard();
                     break;
                 case 3 :
+                    player->getCharacter()->doSpecialAbility(player, command.get_cmd(), gameController);
+                    gameController->getNextCharacterCard();
                     break;
                 case 4 :
                     gameController->showOverview(player);

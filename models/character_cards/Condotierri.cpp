@@ -6,7 +6,7 @@
 
 using namespace std;
 
-void Condotierri::doSpecialAbility(std::shared_ptr<Player> player, std::string command) {
+void Condotierri::doSpecialAbility(std::shared_ptr<Player> player, std::string command, shared_ptr<GameController> gameController) {
     countRedBuildings(player);
 
     //TODO: REMOVE BUILDING FROM OTHER PLAYER (Need access to gamecontroller)

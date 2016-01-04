@@ -7,5 +7,9 @@
 //
 
 #include "Player.hpp"
-using namespace std;
 
+void Player::buildBuilding(std::shared_ptr<BuildingCard> card) {
+    buildBuildings.push_back(card);
+
+    //buildingCards.erase(find(buildingCards.begin(), buildingCards.end(), card));
+}

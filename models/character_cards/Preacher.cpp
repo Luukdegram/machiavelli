@@ -16,6 +16,6 @@ void Preacher::countBlueBuildings(std::shared_ptr<Player> player) {
     player->setGoldCoins(player->getGoldCoins() + extraCoins);
 }
 
-void Preacher::doSpecialAbility(std::shared_ptr<Player> player, std::string string) {
+void Preacher::doSpecialAbility(std::shared_ptr<Player> player, std::string string, shared_ptr<GameController> gameController) {
     countBlueBuildings(player);
 }

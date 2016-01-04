@@ -29,6 +29,7 @@ private:
 	std::vector<std::shared_ptr<BuildingCard>> buildingCards;
 	std::vector<std::shared_ptr<class CharacterCard>> characterCards;
 	std::vector<std::shared_ptr<BuildingCard>> buildBuildings;
+    std::shared_ptr<CharacterCard> character;
 	int goldCoins;
 	bool isKing;
 	bool firstToFinish;
@@ -67,7 +68,16 @@ public:
 		Player::characterCards = characterCards;
 	}
 
-	int getGoldCoins() const {
+
+    const std::shared_ptr<CharacterCard> &getCharacter() const {
+        return character;
+    }
+
+    void setCharacter(const std::shared_ptr<CharacterCard> &character) {
+        Player::character = character;
+    }
+
+    int getGoldCoins() const {
 		return goldCoins;
 	}
 
@@ -113,6 +123,8 @@ public:
 	void setFirstToFinish(bool firstToFinish) {
 		Player::firstToFinish = firstToFinish;
 	}
+
+    void buildBuilding(std::shared_ptr<BuildingCard> card);
 };
 
 #endif /* Player_hpp */

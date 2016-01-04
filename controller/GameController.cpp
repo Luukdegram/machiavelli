@@ -156,14 +156,6 @@ void GameController::doNextTurn(){
     setUpRound();
 
     setNextKing();
-
-//    for(shared_ptr<CharacterCard> cc : characterCards){
-//        for(shared_ptr<Player> player : players){
-//            if(find(player->getCharacterCards().begin(), player->getCharacterCards().end(), cc) != player->getCharacterCards().end()){
-//                doPlayerTurn(player, cc);
-//            }
-//        }
-//    }
 }
 
 void GameController::doTurn(){
@@ -331,15 +323,6 @@ void GameController::goToNextPlayerInSetup(){
 }
 
 void GameController::goToNextPlayerInGame(shared_ptr<Player> p){
-//    for(shared_ptr<Player> p : players){
-//        if(!p->isHasTurn()){
-//            p->setHasTurn(true);
-//        }else{
-//            p->getClient()->write("Please wait...\r\n");
-//            p->setHasTurn(false);
-//        }
-//    }
-
     for(shared_ptr<Player> player : players){
         if(player == p){
             player->setHasTurn(true);
@@ -412,6 +395,7 @@ void GameController::getNextCharacterCard(){
                 } else {
                     goToNextPlayerInGame(p);
                 }
+                p->setCharacter(cc);
                 doPlayerTurn(p, cc);
                 nextCharacterCard++;
                 break;
@@ -469,4 +453,12 @@ void GameController::showOverview(std::shared_ptr<Player> player) {
     client->write("Koopman: Ontvangt één extra goudstuk; Ontvangt van commerciële gebouwen. \r\n");
     client->write("Bouwmeester: Trekt twee extra kaarten; Mag drie gebouwen gebouwen. \r\n");
     client->write("Condottiere: Vernietigt een gebouw; Ontvangt van alle militaire gebouwen. \r\n");
+}
+
+std::shared_ptr<Player> GameController::getOpponent(std::shared_ptr<Player> player) {
+    for(shared_ptr<player> current : players) {
+        if (current != player) return current;
+    }
+
+    return nullptr;
 }

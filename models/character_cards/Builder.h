@@ -12,6 +12,11 @@ class Builder : public CharacterCard {
 
 public:
     Builder(int value, const std::string &name) : CharacterCard(value, name) { }
+
+    virtual void doSpecialAbility(std::shared_ptr<Player> player, std::string command,
+                                  std::shared_ptr<GameController> gameController) override;
+
+    void buildBuilding(std::shared_ptr<Player> player, int count);
 };
 
 

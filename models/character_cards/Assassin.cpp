@@ -16,6 +16,6 @@ CharacterType Assassin::assassinate(string command){
     }
 }
 
-void Assassin::doSpecialAbility(shared_ptr<Player> ptr, std::string command) {
+void Assassin::doSpecialAbility(shared_ptr<Player> ptr, std::string command, shared_ptr<GameController> gameController) {
     assassinate(command);
 }

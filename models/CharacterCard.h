@@ -10,6 +10,7 @@
 #include "BaseCard.h"
 #include "CharacterType.h"
 #include "Player.hpp"
+#include "../controller/GameController.h"
 
 
 class CharacterCard : public BaseCard {
@@ -56,7 +57,7 @@ public:
         CharacterCard::isRobbed = isRobbed;
     }
 
-    virtual void doSpecialAbility(std::shared_ptr<Player>, std::string command);
+    virtual void doSpecialAbility(std::shared_ptr<Player>, std::string command, std::shared_ptr<GameController> gameController);
 };
 
 

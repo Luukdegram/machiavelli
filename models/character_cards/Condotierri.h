@@ -14,7 +14,7 @@ public:
     Condotierri(int value, const std::string &name) : CharacterCard(value, name) { }
 
     void countRedBuildings(std::shared_ptr<Player> player);
-    virtual void doSpecialAbility(std::shared_ptr<Player> player, std::string command);
+    virtual void doSpecialAbility(std::shared_ptr<Player> player, std::string command, std::shared_ptr<GameController> gameController);
 };
 
 

@@ -17,7 +17,7 @@ public:
 
     void addCoins(std::shared_ptr<Player> p);
 
-    virtual void doSpecialAbility(std::shared_ptr<Player>, std::string);
+    virtual void doSpecialAbility(std::shared_ptr<Player>, std::string, std::shared_ptr<GameController> gameController);
 };
 
 

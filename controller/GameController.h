@@ -159,6 +159,8 @@ public:
     void getOpponentDetails(std::shared_ptr<Player> player);
 
     void showOverview(std::shared_ptr<Player> player);
+
+    std::shared_ptr<Player> getOpponent(std::shared_ptr<Player> player);
 };
 
 
