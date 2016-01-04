@@ -14,7 +14,7 @@ public:
     Preacher(int value, const std::string &name) : CharacterCard(value, name) { }
 
     void countBlueBuildings(std::shared_ptr<Player>);
-    virtual void doSpecialAbility(std::shared_ptr<Player>, std::string, shared_ptr<GameController> gameController);
+    virtual void doSpecialAbility(std::shared_ptr<Player>, std::string, std::shared_ptr<GameController> gameController);
 };
 
 
