@@ -34,13 +34,18 @@ void Builder::buildBuilding(std::shared_ptr<Player> player, int count) {
         counter++;
     }
 
-    int answer = stoi(client->readline());
+    int answer = stoi(client->readline()) - 1;
 
-    if(answer > player->getBuildingCards().size()) {
+    if(answer >= player->getBuildingCards().size()) {
         client->write("Invalid option! \r\n");
         buildBuilding(player, count);
     }
 
 
-    player->buildBuilding(player->getBuildingCards()->at(answer));
+    player->buildBuilding(player->getBuildingCards().at(answer));
+    count++;
+
+    if(count < 3) {
+        buildBuilding(player, count);
+    }
 }
