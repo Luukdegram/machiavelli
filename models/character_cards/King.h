@@ -12,6 +12,10 @@ class King : public CharacterCard {
 
 public:
     King(int value, const std::string &name) : CharacterCard(value, name) { }
+    void countBuildings(std::shared_ptr<Player> player);
+
+    virtual void doSpecialAbility(std::shared_ptr<Player> ptr, std::string command,
+                                  std::shared_ptr<GameController> gameController) override;
 };
 
 

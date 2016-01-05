@@ -8,6 +8,7 @@ using namespace std;
 
 void Builder::doSpecialAbility(std::shared_ptr<Player> player, std::string command,
                                std::shared_ptr<GameController> gameController) {
+    CharacterCard::doSpecialAbility(player, command, gameController);
 
     // Give player 2 building cards
     player->getBuildingCards().push_back(gameController->getRandomBuildingCard());

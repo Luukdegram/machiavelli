@@ -13,9 +13,6 @@ class Thief : public CharacterCard {
 public:
     Thief(int value, const std::string &name) : CharacterCard(value, name) { }
 
-
-    CharacterType steal(std::string command);
-
     virtual void doSpecialAbility(std::shared_ptr<Player>, std::string command, std::shared_ptr<GameController> gameController);
 };
 

@@ -7,6 +7,7 @@
 using namespace std;
 
 void Condotierri::doSpecialAbility(std::shared_ptr<Player> player, std::string command, shared_ptr<GameController> gameController) {
+    CharacterCard::doSpecialAbility(player, command, gameController);
     countRedBuildings(player);
     removeBuilding(player, gameController);
 }

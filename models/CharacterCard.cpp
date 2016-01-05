@@ -13,5 +13,5 @@ CharacterCard::CharacterCard(int value, const std::string &name) : name(name) {
 }
 
 void CharacterCard::doSpecialAbility(shared_ptr<Player> ptr, std::string command, shared_ptr<GameController> gameController) {
-
+    ptr->setUsedAbility(true);
 }

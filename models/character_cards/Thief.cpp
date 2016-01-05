@@ -8,24 +8,12 @@
 
 using namespace std;
 
-CharacterType Thief::steal(string command) {
-    CharacterType type;
-  try{
-    type = CharacterCardFactory::getInstance()->getTypeRegistry().at(command);
-  }catch (exception e){
-      cout << e.what();
-      return CharacterType::INVALID;
-  }
+void Thief::doSpecialAbility(shared_ptr<Player> player, std::string command, shared_ptr<GameController> gameController) {
+    CharacterCard::doSpecialAbility(player, command, gameController);
 
-    if(type == CharacterType::ASSASSIN){
-        cout << "You cannot robe the assassin!" << endl;
-        return CharacterType::INVALID;
+    if(gameController->getOpponent(player)->getCharacter()->getCharacterType() != CharacterType::ASSASSIN) {
+        gameController->getOpponent(player)->setStolen(true);
     }
 
-    //TODO check in the GameController if the character isn't dead.
-    return type;
-}
-
-void Thief::doSpecialAbility(shared_ptr<Player> ptr, std::string command, shared_ptr<GameController> gameController) {
-    steal(command);
+    player->getClient()->write("Successfully robbed the opponent.\n");
 }

@@ -13,8 +13,6 @@ class Assassin : public CharacterCard {
 public:
     Assassin(int value, const std::string &name) : CharacterCard(value, name) { }
 
-    CharacterType assassinate(std::string command);
-
     virtual void doSpecialAbility(std::shared_ptr<Player>, std::string command, std::shared_ptr<GameController> gameController);
 };
 

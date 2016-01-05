@@ -8,14 +8,13 @@
 
 using namespace std;
 
-CharacterType Assassin::assassinate(string command){
-    try {
-        return CharacterCardFactory::getInstance()->getTypeRegistry().at(command);
-    }catch(exception e){
-      cout << e.what();
-    }
-}
 
-void Assassin::doSpecialAbility(shared_ptr<Player> ptr, std::string command, shared_ptr<GameController> gameController) {
-    assassinate(command);
+void Assassin::doSpecialAbility(shared_ptr<Player> player, std::string command, shared_ptr<GameController> gameController) {
+    CharacterCard::doSpecialAbility(player, command, gameController);
+
+    if(gameController->getOpponent(player)->getCharacter()->getCharacterType() != CharacterType::CONDOTTIERI) {
+        gameController->getOpponent(player)->setKilled(true);
+    }
+
+    player->getClient()->write("Successfully killed the opponent.\n");
 }

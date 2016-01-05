@@ -8,7 +8,6 @@
 using namespace std;
 
 CommandHandler::CommandHandler(shared_ptr<GameController> gameController) : gameController(gameController) {
-  //  gameController = shared_ptr<GameController>(new GameController);
 }
 
 void CommandHandler::handleCommand(ClientCommand command){
@@ -21,7 +20,7 @@ void CommandHandler::handleCommand(ClientCommand command){
             handleCommandInGame(command);
         }
     }else{
-        client->write("It's not your turn yet!");
+        client->write("It's not your turn yet!\n");
     }
 }
 
@@ -61,15 +60,19 @@ void CommandHandler::handleCommandInGame(ClientCommand command){
                     gameController->getNextCharacterCard();
                     break;
                 case 3 :
-                    player->getCharacter()->doSpecialAbility(player, command.get_cmd(), gameController);
+                    if(!player->isUsedAbility()) {
+                        player->getCharacter()->doSpecialAbility(player, command.get_cmd(), gameController);
+                    } else {
+                        client->write("Already used your special ability.\n");
+                    }
                     break;
                 case 4 :
                     gameController->showOverview(player);
                 default:
-                    client->write("Not a valid option!");
+                    client->write("Not a valid option!\n");
                     break;
             }
     }catch (exception e){
-        client->write("Not a valid command");
+        client->write("Not a valid command\n");
     }
 }

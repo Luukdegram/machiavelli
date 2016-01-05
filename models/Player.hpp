@@ -35,6 +35,9 @@ private:
 	bool firstToFinish;
 	bool hasTurn;
 	int points;
+    bool stolen;
+    bool killed;
+    bool usedAbility;
 public:
 	const std::string &getName() const {
 		return name;
@@ -44,7 +47,31 @@ public:
 		Player::name = name;
 	}
 
-	const std::vector<std::shared_ptr<BuildingCard>> &getBuildBuildings() const {
+    bool isUsedAbility() const {
+        return usedAbility;
+    }
+
+    void setUsedAbility(bool usedAbility) {
+        Player::usedAbility = usedAbility;
+    }
+
+    bool isStolen() const {
+        return stolen;
+    }
+
+    void setStolen(bool stolen) {
+        Player::stolen = stolen;
+    }
+
+    bool isKilled() const {
+        return killed;
+    }
+
+    void setKilled(bool killed) {
+        Player::killed = killed;
+    }
+
+    const std::vector<std::shared_ptr<BuildingCard>> &getBuildBuildings() const {
 		return buildBuildings;
 	}
 

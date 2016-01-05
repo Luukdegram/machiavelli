@@ -8,6 +8,7 @@
 using namespace std;
 
 void Magician::doSpecialAbility(std::shared_ptr<Player> player, std::string command, shared_ptr<GameController> gameController) {
+    CharacterCard::doSpecialAbility(player, command, gameController);
     handleSpecialAbility(player, command, gameController);
 }
 
