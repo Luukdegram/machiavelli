@@ -30,7 +30,7 @@ void Condotierri::removeBuilding(std::shared_ptr<Player> player, std::shared_ptr
     client->write("Which building do you want to remove?\n");
     int counter = 0;
     for(shared_ptr<BuildingCard> card : buildBuildings) {
-        client->write("[" + counter + "] " + card->getName());
+        client->write("[" + to_string(counter) + "] " + card->getName());
     }
 
     int answer = stoi(client->readline());
@@ -43,8 +43,8 @@ void Condotierri::removeBuilding(std::shared_ptr<Player> player, std::shared_ptr
 
     shared_ptr<BuildingCard> chosenCard = buildBuildings.at(answer);
     if(buildBuildings.size() < 8) {
-        if (chosenCard->value > 1) {
-            player->setGoldCoins(player->getGoldCoins() - chosenCard->value);
+        if (chosenCard->getValue() > 1) {
+            player->setGoldCoins(player->getGoldCoins() - chosenCard->getValue());
         }
         gameController->getOpponent(player)->removeBuilding(chosenCard);
         client->write("Removed opponent's card");

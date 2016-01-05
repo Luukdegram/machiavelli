@@ -6,7 +6,7 @@
 #include <memory>
 using namespace std;
 
-void Merchant::doSpecialAbility(shared_ptr<Player> player, std::string string = "", shared_ptr<GameController> gameController) {
+void Merchant::doSpecialAbility(shared_ptr<Player> player, std::string string, shared_ptr<GameController> gameController) {
     CharacterCard::doSpecialAbility(player, string, gameController);
     addCoins(player);
 }

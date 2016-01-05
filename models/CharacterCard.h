@@ -12,6 +12,7 @@
 #include "Player.hpp"
 #include "../controller/GameController.h"
 
+class GameController;
 
 class CharacterCard : public BaseCard {
 

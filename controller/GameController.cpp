@@ -432,7 +432,7 @@ void GameController::getOpponentDetails(std::shared_ptr<Player> player) {
     for(shared_ptr<Player> current : players) {
         if(current != player) {
             client->write("Player " + current->get_name() + " has: \r\n ");
-            client->write(current->getGoldCoins() + " coins \r\n");
+            client->write(to_string(current->getGoldCoins()) + " coins \r\n");
 
             if(current->getBuildBuildings().size() > 0) {
                 client->write("The player also has the following buildings: \r\n");
@@ -465,8 +465,8 @@ void GameController::showOverview(std::shared_ptr<Player> player) {
     client->write("Condottiere: Vernietigt een gebouw; Ontvangt van alle militaire gebouwen. \r\n");
 }
 
-std::shared_ptr<Player> GameController::getOpponent(std::shared_ptr<Player> player) {
-    for(shared_ptr<player> current : players) {
+std::shared_ptr<Player> GameController::getOpponent(shared_ptr<Player> player) {
+    for(shared_ptr<Player> current : players) {
         if (current != player) return current;
     }
 

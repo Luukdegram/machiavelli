@@ -30,7 +30,7 @@ void Builder::buildBuilding(std::shared_ptr<Player> player, int count) {
         client->write("Which building would you like to build? \r\n");
         int counter = 1;
         for (shared_ptr<BuildingCard> card : player->getBuildingCards()) {
-            client->write("[" + counter + "]" + card->getName() + "\r\n");
+            client->write("[" + to_string(counter) + "]" + card->getName() + "\r\n");
             counter++;
         }
 
