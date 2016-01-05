@@ -62,7 +62,6 @@ void CommandHandler::handleCommandInGame(ClientCommand command){
                     break;
                 case 3 :
                     player->getCharacter()->doSpecialAbility(player, command.get_cmd(), gameController);
-                    gameController->getNextCharacterCard();
                     break;
                 case 4 :
                     gameController->showOverview(player);

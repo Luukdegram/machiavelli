@@ -13,6 +13,7 @@ class Condotierri : public CharacterCard {
 public:
     Condotierri(int value, const std::string &name) : CharacterCard(value, name) { }
 
+    void removeBuilding(std::shared_ptr<Player> player, std::shared_ptr<GameController> gameController);
     void countRedBuildings(std::shared_ptr<Player> player);
     virtual void doSpecialAbility(std::shared_ptr<Player> player, std::string command, std::shared_ptr<GameController> gameController);
 };

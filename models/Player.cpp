@@ -29,3 +29,23 @@ void Player::buildBuilding(std::shared_ptr<BuildingCard> card) {
         buildingCards.erase(buildingCards.begin() + index);
     }
 }
+
+void Player::removeBuilding(std::shared_ptr<BuildingCard> card) {
+    int index;
+    bool initialized = false;
+
+    int counter = 0;
+    for(std::shared_ptr<BuildingCard> current : buildBuildings) {
+        if(current == card) {
+            index = counter;
+            initialized = true;
+        }
+
+        counter ++;
+    }
+
+    // Make sure we delete correct card
+    if(initialized) {
+        buildBuildings.erase(buildBuildings.begin() + index);
+    }
+}

@@ -125,6 +125,7 @@ public:
 	}
 
     void buildBuilding(std::shared_ptr<BuildingCard> card);
+    void removeBuilding(std::shared_ptr<BuildingCard> card);
 };
 
 #endif /* Player_hpp */
