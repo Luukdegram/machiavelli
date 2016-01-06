@@ -139,6 +139,8 @@ void GameController::playRandomBuildingCards(){
     }
 }
 
+//TODO make cheat setup for debugging
+
 void GameController::doNextTurn(){
 
     nextCharacterCard = 0;
@@ -238,6 +240,8 @@ void GameController::showGameUI(shared_ptr<Player> p, shared_ptr<CharacterCard> 
 
 void GameController::setUpRound(){
     isInSetup = true;
+    setFirstCard(true);
+    setSecondCard(false);
     availableCards = characterCards;
     shared_ptr<Player> king;
     shared_ptr<Player> otherPlayer;
@@ -251,6 +255,8 @@ void GameController::setUpRound(){
             otherPlayer = p;
         }
     }
+    setIsInSetup(true);
+    setIsPlaying(false);
     king->setHasTurn(true);
     currentPlayer->getClient()->clear_screen();
     currentPlayer->getClient()->write("The top card is: " + availableCards[0]->getName() + "\r\n");
@@ -418,7 +424,7 @@ void GameController::getNextCharacterCard(){
         }
     }
     else{
-        cout << "not";
+        doNextTurn();
     }
 }
 

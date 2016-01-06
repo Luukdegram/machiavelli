@@ -33,6 +33,7 @@ private:
     bool firstCard;
     bool firstTurn;
     bool secondCard;
+    bool lastRound;
     int goldCoins;
 public:
     void init();
@@ -83,6 +84,15 @@ public:
 
     void setIsInSetup(bool isInSetup) {
         GameController::isInSetup = isInSetup;
+    }
+
+
+    bool isLastRound() const {
+        return lastRound;
+    }
+
+    void setLastRound(bool lastRound) {
+        GameController::lastRound = lastRound;
     }
 
     bool isIsPlaying() const {
