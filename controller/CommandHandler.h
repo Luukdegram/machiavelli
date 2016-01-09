@@ -20,6 +20,8 @@ public:
     void handleCommandSetup(ClientCommand command);
 
     void handleCommandInGame(ClientCommand command);
+
+    void handleCommandToBuild(ClientCommand command);
 };
 
 

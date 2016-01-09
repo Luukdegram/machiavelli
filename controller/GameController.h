@@ -30,11 +30,13 @@ private:
     std::vector<std::shared_ptr<Socket>> sockets;
     bool isInSetup;
     bool isPlaying;
+    bool canBuild;
     bool firstCard;
     bool firstTurn;
     bool secondCard;
     bool lastRound;
     int goldCoins;
+
 public:
     void init();
 
@@ -63,7 +65,15 @@ public:
     void playRandomCharacterCards();
 
 
-     std::vector<std::shared_ptr<Socket>> &getSockets() {
+    bool isCanBuild() const {
+        return canBuild;
+    }
+
+    void setCanBuild(bool canBuild) {
+        GameController::canBuild = canBuild;
+    }
+
+    std::vector<std::shared_ptr<Socket>> &getSockets() {
         return sockets;
     }
 
@@ -171,6 +181,10 @@ public:
     void showOverview(std::shared_ptr<Player> player);
 
     std::shared_ptr<Player> getOpponent(std::shared_ptr<Player> player);
+
+    void showPossibleBuildings(std::shared_ptr<Player> player);
+
+    void buildBuilding(int option, std::shared_ptr<Player> player);
 };
 
 

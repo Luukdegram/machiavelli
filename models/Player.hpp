@@ -71,7 +71,7 @@ public:
         Player::killed = killed;
     }
 
-    const std::vector<std::shared_ptr<BuildingCard>> &getBuildBuildings() const {
+	std::vector<std::shared_ptr<BuildingCard>> &getBuildBuildings() {
 		return buildBuildings;
 	}
 

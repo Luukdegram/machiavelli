@@ -242,6 +242,7 @@ void GameController::setUpRound(){
     isInSetup = true;
     setFirstCard(true);
     setSecondCard(false);
+    setCanBuild(false);
     availableCards = characterCards;
     shared_ptr<Player> king;
     shared_ptr<Player> otherPlayer;
@@ -385,7 +386,7 @@ void GameController::getTwoBuildingCardsAndPutOneBack(shared_ptr<Player> p){
 }
 
 void GameController::getNextCharacterCard(){
-
+    setCanBuild(false);
     if(nextCharacterCard <= 7) {
         shared_ptr<CharacterCard> cc = characterCards[nextCharacterCard];
 
@@ -476,4 +477,37 @@ std::shared_ptr<Player> GameController::getOpponent(shared_ptr<Player> player) {
     }
 
     return nullptr;
+}
+
+void GameController::showPossibleBuildings(shared_ptr<Player> player){
+    setCanBuild(true);
+    shared_ptr<Socket> client = player->getClient();
+
+    client->clear_screen();
+    client->write("Possible buildings you can build: \r\n");
+
+    for(int i = 0; i < player->getBuildingCards().size(); i++){
+        if(player->getBuildingCards()[i]->getValue() <= player->getGoldCoins()) {
+            client->write("[" + to_string(i) + "] " + player->getBuildingCards()[i]->getName() + "\r\n");
+        }
+    }
+    client->write("If you don't want to build a building, type '123' \r\n machiavli>");
+}
+
+void GameController::buildBuilding(int option, shared_ptr<Player> player){
+    shared_ptr<Socket> client = player->getClient();
+
+    if(option == 123){
+        getNextCharacterCard();
+    }else if(option > -1 && option < player->getBuildingCards().size() && (player->getBuildingCards()[option]->getValue() <= player->getGoldCoins())){
+        client->write("You expanded your city with " + player->getBuildingCards()[option]->getName() + "\r\n");
+        player->setGoldCoins(player->getGoldCoins() - player->getBuildingCards()[option]->getValue());
+        player->getBuildBuildings().push_back(player->getBuildingCards()[option]);
+        player->getBuildingCards().erase(player->getBuildingCards().begin() + option);
+        getNextCharacterCard();
+    }else{
+        client->write("Not a valid option! \r\n");
+        sleep(1);
+        showPossibleBuildings(player);
+    }
 }
