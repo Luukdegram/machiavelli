@@ -248,6 +248,7 @@ void GameController::setUpRound(){
     shared_ptr<Player> currentPlayer;
 
     for(shared_ptr<Player> p : players){
+        p->setHasTurn(false);
         if(p->isIsKing()){
             king = p;
             currentPlayer = king;
@@ -374,11 +375,8 @@ void GameController::calculatePoints(shared_ptr<Player> p){
 }
 
 void GameController::addCoins(shared_ptr<Player> p, int amount){
- //   if((goldCoins -= amount) <= 0) {            //Is there game limit of 30 in game coins???
-        setGoldCoins(goldCoins -= amount);
-        p->setGoldCoins(p->getGoldCoins() + amount);
-  //  }
-
+    setGoldCoins(goldCoins -= amount);
+    p->setGoldCoins(p->getGoldCoins() + amount);
 }
 
 void GameController::getTwoBuildingCardsAndPutOneBack(shared_ptr<Player> p){
@@ -406,6 +404,7 @@ void GameController::getNextCharacterCard(){
                     getOpponent(p)->setGoldCoins(getOpponent(p)->getGoldCoins() + amount);
                     p->getClient()->write("You have been robbed! \n");
                     p->setStolen(false);
+                    sleep(1);
                 }
                 p->setCharacter(cc);
                 if(p->isKilled()){

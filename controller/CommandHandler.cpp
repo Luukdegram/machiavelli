@@ -7,8 +7,7 @@
 
 using namespace std;
 
-CommandHandler::CommandHandler(shared_ptr<GameController> gameController) : gameController(gameController) {
-}
+CommandHandler::CommandHandler(shared_ptr<GameController> gameController) : gameController(gameController) {}
 
 void CommandHandler::handleCommand(ClientCommand command){
     shared_ptr<Socket> client {command.get_client()};

@@ -25,7 +25,7 @@ using namespace std;
 #include "controller/CommandHandler.h"
 
 namespace machiavelli {
-    const int tcp_port {1081};
+    const int tcp_port {1080};
     const string prompt {"machiavelli> "};
 }
 
