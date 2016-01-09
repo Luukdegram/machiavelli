@@ -142,22 +142,61 @@ void GameController::playRandomBuildingCards(){
 //TODO make cheat setup for debugging
 
 void GameController::doNextTurn(){
+    if(!isLastRound()) {
+        nextCharacterCard = 0;
+        for (shared_ptr<Socket> client : sockets) {
+            client->write("Starting turn!\r\n");
+        }
 
-    nextCharacterCard = 0;
-    for(shared_ptr<Socket> client : sockets){
-        client->write("Starting turn!\r\n");
+        for (shared_ptr<Player> player : players) {
+            player->getCharacterCards().clear();
+        }
+
+        shuffle(characterCards.begin(), characterCards.end(), dre);
+        shuffle(buildingCards.begin(), buildingCards.end(), dre);
+
+        setUpRound();
+
+        setNextKing();
+    }else {
+        for (shared_ptr<Player> player : players) {
+            calculatePoints(player);
+        }
+        determineWinner();
+    }
+}
+
+void GameController::determineWinner(){
+    if (players[0]->getPoints() > players[1]->getPoints()) {
+        for (shared_ptr<Player> player : players) {
+            player->getClient()->write(players[0]->getName() + " won the game with " + to_string(players[0]->getPoints()) + " points! \r\n");
+        }
+    }else if(players[0]->getPoints() < players[1]->getPoints()){
+        for (shared_ptr<Player> player : players) {
+            player->getClient()->write(players[1]->getName() + " won the game with " + to_string(players[1]->getPoints()) + " points! \r\n");
+        }
+    }else {
+        for (shared_ptr<Player> player : players) {
+            calculatePointsByBuildings(player);
+        }
+
+        if(players[0]->getPoints() == players[1]->getPoints()){
+            for (shared_ptr<Player> player : players) {
+                player->getClient()->write("It's a draw! Both players have " + to_string(players[0]->getPoints()) + " get points!");
+            }
+        }else{
+            determineWinner();
+        }
+    }
+}
+
+void GameController::calculatePointsByBuildings(shared_ptr<Player> player){
+    int points = 0;
+    for(shared_ptr<BuildingCard> bc : player->getBuildBuildings()){
+        points += bc->getValue();
     }
 
-    for(shared_ptr<Player> player : players){
-        player->getCharacterCards().clear();
-    }
-
-    shuffle(characterCards.begin(), characterCards.end(), dre);
-    shuffle(buildingCards.begin(), buildingCards.end(), dre);
-
-    setUpRound();
-
-    setNextKing();
+    player->setPoints(points);
 }
 
 void GameController::doTurn(){
@@ -504,10 +543,25 @@ void GameController::buildBuilding(int option, shared_ptr<Player> player){
         player->setGoldCoins(player->getGoldCoins() - player->getBuildingCards()[option]->getValue());
         player->getBuildBuildings().push_back(player->getBuildingCards()[option]);
         player->getBuildingCards().erase(player->getBuildingCards().begin() + option);
+        if(player->getBuildBuildings().size() >= 8){
+            setFirstToFinish(player);
+            setLastRound(true);
+        }
         getNextCharacterCard();
     }else{
         client->write("Not a valid option! \r\n");
         sleep(1);
         showPossibleBuildings(player);
     }
+}
+
+void GameController::setFirstToFinish(shared_ptr<Player> p){
+    bool alreadySet = false;
+    for (int i = 0; i < players.size(); ++i) {
+        if(players[i]->isFirstToFinish()){
+            alreadySet = true;
+        }
+    }
+
+    if(!alreadySet) p->setFirstToFinish(true);
 }

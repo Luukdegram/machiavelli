@@ -185,6 +185,12 @@ public:
     void showPossibleBuildings(std::shared_ptr<Player> player);
 
     void buildBuilding(int option, std::shared_ptr<Player> player);
+
+    void determineWinner();
+
+    void calculatePointsByBuildings(std::shared_ptr<Player> player);
+
+    void setFirstToFinish(std::shared_ptr<Player> p);
 };
 
 
