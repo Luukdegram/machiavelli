@@ -93,6 +93,7 @@ void GameController::initCharacterCards(){
        // characterCards.push_back(shared_ptr<CharacterCard>(new CharacterCard(stoi(line[0]), line[1])));
         line[1].erase(line[1].size() - 1);
         characterCards.push_back(CharacterCardFactory::getInstance()->createCharacterCard(line[1], line[0]));
+        overViewCard.push_back(CharacterCardFactory::getInstance()->createCharacterCard(line[1], line[0]));
     }
 
     shuffle(characterCards.begin(), characterCards.end(), dre);
@@ -169,24 +170,30 @@ void GameController::doNextTurn(){
 
 void GameController::determineWinner(){
     if (players[0]->getPoints() > players[1]->getPoints()) {
-        for (shared_ptr<Player> player : players) {
-            player->getClient()->write(players[0]->getName() + " won the game with " + to_string(players[0]->getPoints()) + " points! \r\n");
-        }
+        showEndGameText(players[0], false);
     }else if(players[0]->getPoints() < players[1]->getPoints()){
-        for (shared_ptr<Player> player : players) {
-            player->getClient()->write(players[1]->getName() + " won the game with " + to_string(players[1]->getPoints()) + " points! \r\n");
-        }
+        showEndGameText(players[1], false);
     }else {
         for (shared_ptr<Player> player : players) {
             calculatePointsByBuildings(player);
         }
 
         if(players[0]->getPoints() == players[1]->getPoints()){
-            for (shared_ptr<Player> player : players) {
-                player->getClient()->write("It's a draw! Both players have " + to_string(players[0]->getPoints()) + " get points!");
-            }
+            showEndGameText(players[0], true);
         }else{
             determineWinner();
+        }
+    }
+}
+
+void GameController::showEndGameText(shared_ptr<Player> winner, bool isDraw){
+    for(shared_ptr<Socket> client : sockets){
+        client->clear_screen();
+        client->write("The game has finished! \r\n");
+        if(!isDraw){
+            client->write(winner->getName() + " has won the game with " + to_string(winner->getPoints()) + " points! \r\n");
+        }else{
+            client->write("It's a draw! Both players have " + to_string(winner->getPoints()) + " points! \r\n");
         }
     }
 }
@@ -432,7 +439,8 @@ void GameController::getTwoBuildingCardsAndPutOneBack(shared_ptr<Player> p){
 void GameController::getNextCharacterCard(){
     setCanBuild(false);
     if(nextCharacterCard <= 7) {
-        shared_ptr<CharacterCard> cc = characterCards[nextCharacterCard];
+        //shared_ptr<CharacterCard> cc = characterCards[nextCharacterCard];
+        shared_ptr<CharacterCard> cc = overViewCard[nextCharacterCard];
 
         for (int i = 0; i < players.size(); i++) {
             shared_ptr<Player> p = players[i];

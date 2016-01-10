@@ -21,6 +21,7 @@ private:
     std::vector<std::shared_ptr<BuildingCard>> buildingCards;
     std::vector<std::shared_ptr<CharacterCard>> characterCards;
     std::vector<std::shared_ptr<CharacterCard>> availableCards;
+    std::vector<std::shared_ptr<CharacterCard>> overViewCard;
     std::vector<BuildingColor> buildingColors;
     std::random_device dev;
     std::default_random_engine dre{dev()};
@@ -191,6 +192,10 @@ public:
     void calculatePointsByBuildings(std::shared_ptr<Player> player);
 
     void setFirstToFinish(std::shared_ptr<Player> p);
+
+    void showEndGameText(std::shared_ptr<Player> player);
+
+    void showEndGameText(std::shared_ptr<Player> winner, bool isDraw);
 };
 
 
