@@ -18,7 +18,7 @@
 class Player {
 public:
 	Player() {}
-	Player(const std::string& name, std::shared_ptr<Socket> socket) : name {name}, client(socket) {}
+	Player(const std::string& name, std::shared_ptr<Socket> socket) : name {name}, client(socket) {setPoints(0);}
 	
 	std::string get_name() const { return name; }
 	void set_name(const std::string& new_name) { name = new_name; }
