@@ -36,8 +36,8 @@ private:
 	bool firstToFinish;
 	bool hasTurn;
 	int points;
-    CharacterType stolen;
-    CharacterType killed;
+    CharacterType stolen = CharacterType::INVALID;
+    CharacterType killed = CharacterType::INVALID;
     bool usedAbility;
 public:
 	const std::string &getName() const {

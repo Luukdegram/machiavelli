@@ -432,7 +432,21 @@ void GameController::addCoins(shared_ptr<Player> p, int amount){
 }
 
 void GameController::getTwoBuildingCardsAndPutOneBack(shared_ptr<Player> p){
+    // Remove 1 card if player has building cards
+    if(p->getBuildingCards().size() > 0) {
+        int size = static_cast<int>(p->getBuildingCards().size());
+        uniform_int_distribution<int> dist{0, size};
+
+        p->getBuildingCards().erase(find(p->getBuildingCards().begin(), p->getBuildingCards().end(), p->getBuildingCards().at(dist(dre))));
+    }
+
+    // Add 2 cards to player
+    for(int i = 0; i < 2; i++) {
+        p->getBuildingCards().push_back(buildingCards.at(i));
+    }
+    // remove 2 cards from building cards
     buildingCards.erase(buildingCards.end() - 2, buildingCards.end());
+
     p->getClient()->clear_screen();
 }
 
