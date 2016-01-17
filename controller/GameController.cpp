@@ -452,18 +452,21 @@ void GameController::getNextCharacterCard(){
                 } else {
                     goToNextPlayerInGame(p);
                 }
-                if(p->isStolen()) {
+                if(p->getStolen() == cc->getCharacterType()) {
                     int amount = p->getGoldCoins();
                     getOpponent(p)->setGoldCoins(getOpponent(p)->getGoldCoins() + amount);
                     p->getClient()->write("You have been robbed! \n");
-                    p->setStolen(false);
+                    p->setStolen(CharacterType::INVALID);
                     sleep(1);
                 }
                 p->setCharacter(cc);
-                if(p->isKilled()){
-                    getNextCharacterCard();
-                } else {
-                    doPlayerTurn(p, cc);
+                if(p->getKilled() != CharacterType::INVALID) {
+                    if (p->getKilled() == cc->getCharacterType()) {
+                        getNextCharacterCard();
+                    } else {
+                        doPlayerTurn(p, cc);
+                    }
+                    p->setKilled(CharacterType::INVALID);
                 }
                 nextCharacterCard++;
                 break;

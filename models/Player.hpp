@@ -14,6 +14,7 @@
 #include <vector>
 #include "BuildingCard.h"
 #include "../lib/Socket.h"
+#include "CharacterType.h"
 
 class Player {
 public:
@@ -35,8 +36,8 @@ private:
 	bool firstToFinish;
 	bool hasTurn;
 	int points;
-    bool stolen;
-    bool killed;
+    CharacterType stolen;
+    CharacterType killed;
     bool usedAbility;
 public:
 	const std::string &getName() const {
@@ -55,23 +56,24 @@ public:
         Player::usedAbility = usedAbility;
     }
 
-    bool isStolen() const {
+
+    const CharacterType &getStolen() const {
         return stolen;
     }
 
-    void setStolen(bool stolen) {
+    void setStolen(const CharacterType &stolen) {
         Player::stolen = stolen;
     }
 
-    bool isKilled() const {
+    const CharacterType &getKilled() const {
         return killed;
     }
 
-    void setKilled(bool killed) {
+    void setKilled(const CharacterType &killed) {
         Player::killed = killed;
     }
 
-	std::vector<std::shared_ptr<BuildingCard>> &getBuildBuildings() {
+    std::vector<std::shared_ptr<BuildingCard>> &getBuildBuildings() {
 		return buildBuildings;
 	}
 
