@@ -54,5 +54,7 @@ void Builder::buildBuilding(std::shared_ptr<Player> player, int count) {
         if(count < 3) {
             buildBuilding(player, count);
         }
+    } else {
+        player->getClient()->write("You have chosen no \n");
     }
 }
