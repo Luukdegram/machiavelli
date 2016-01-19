@@ -477,10 +477,11 @@ void GameController::getNextCharacterCard(){
                 if(p->getKilled() != CharacterType::INVALID) {
                     if (p->getKilled() == cc->getCharacterType()) {
                         getNextCharacterCard();
-                    } else {
-                        doPlayerTurn(p, cc);
                     }
+
                     p->setKilled(CharacterType::INVALID);
+                } else {
+                    doPlayerTurn(p, cc);
                 }
                 nextCharacterCard++;
                 break;
