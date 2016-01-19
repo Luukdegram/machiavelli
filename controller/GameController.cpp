@@ -461,12 +461,12 @@ void GameController::getNextCharacterCard(){
             if (find(p->getCharacterCards().begin(), p->getCharacterCards().end(), cc) !=
                 p->getCharacterCards().end()) {
 
-                if(cc->getCharacterType() == CharacterType::PREACHER ||
-                        cc->getCharacterType() == CharacterType::MERCHANT ||
-                        cc->getCharacterType() == CharacterType::KING ||
-                        cc->getCharacterType() == CharacterType::CONDOTTIERI ){
-                    addExtraGold(p, cc);
-                }
+//                if(cc->getCharacterType() == CharacterType::PREACHER ||
+//                        cc->getCharacterType() == CharacterType::MERCHANT ||
+//                        cc->getCharacterType() == CharacterType::KING ||
+//                        cc->getCharacterType() == CharacterType::CONDOTTIERI ){
+//                    addExtraGold(p, cc);
+//                }
 
                 if (isFirstTurn()) {
                     p->setHasTurn(true);
@@ -613,9 +613,14 @@ void GameController::showPossibleBuildings(shared_ptr<Player> player){
     if(possibleBuildings == 0){
         client->clear_screen();
         client->write("You don't have enough gold to build a building... getting next character card");
-        sleep(1);
-        getNextCharacterCard();
+        sleep(3);
+        if(player->isUsedAbility()) {
+            getNextCharacterCard();
+        }else{
+            showLastTimeSpecialAbilityOption(player);
+        }
     }else{
+      //  client->write("If you want to use your special ability, type '999' \r\n machiavli>");
         client->write("If you don't want to build a building, type '123' \r\n machiavli>");
     }
 }
@@ -624,8 +629,12 @@ void GameController::buildBuilding(int option, shared_ptr<Player> player){
     shared_ptr<Socket> client = player->getClient();
 
     if(option == 123){
-        getNextCharacterCard();
-    }else if(option > -1 && option < player->getBuildingCards().size() && (player->getBuildingCards()[option]->getValue() <= player->getGoldCoins())){
+        if(player->isUsedAbility()) {
+            getNextCharacterCard();
+        }else{
+            showLastTimeSpecialAbilityOption(player);
+        }
+    } else if(option > -1 && option < player->getBuildingCards().size() && (player->getBuildingCards()[option]->getValue() <= player->getGoldCoins())){
         client->write("You expanded your city with " + player->getBuildingCards()[option]->getName() + "\r\n");
         player->setGoldCoins(player->getGoldCoins() - player->getBuildingCards()[option]->getValue());
         player->getBuildBuildings().push_back(player->getBuildingCards()[option]);
@@ -634,7 +643,12 @@ void GameController::buildBuilding(int option, shared_ptr<Player> player){
             setFirstToFinish(player);
             setLastRound(true);
         }
-        getNextCharacterCard();
+
+        if(player->isUsedAbility()){
+            getNextCharacterCard();
+        }else{
+            showLastTimeSpecialAbilityOption(player);
+        }
     }else{
         client->write("Not a valid option! \r\n");
         sleep(1);
@@ -651,4 +665,13 @@ void GameController::setFirstToFinish(shared_ptr<Player> p){
     }
 
     if(!alreadySet) p->setFirstToFinish(true);
+}
+
+
+void GameController::showLastTimeSpecialAbilityOption(shared_ptr<Player> player){
+    setCanBuild(false);
+    setLastCommand(true);
+
+    player->getClient()->write("Last oportunity to use your special ability! If you want to use choose option 3, else use any other number. \n machiaveli>");
+
 }

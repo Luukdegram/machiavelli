@@ -18,6 +18,8 @@ void CommandHandler::handleCommand(ClientCommand command){
             handleCommandSetup(command);
         }else if(gameController->isIsPlaying() && gameController->isCanBuild()){
             handleCommandToBuild(command);
+        }else if(gameController->isLastCommand()){
+            handleLastCommand(command);
         }else{
             handleCommandInGame(command);
         }
@@ -90,6 +92,24 @@ void CommandHandler::handleCommandToBuild(ClientCommand command){
         option = stoi(command.get_cmd());
         gameController->buildBuilding(option, command.get_player());
     }catch (exception e){
+        client->write("Not a valid command\n");
+    }
+}
+
+void CommandHandler::handleLastCommand(ClientCommand command) {
+
+    shared_ptr<Socket> client{command.get_client()};
+    shared_ptr<Player> player{command.get_player()};
+
+    int option;
+    try {
+        option = stoi(command.get_cmd());
+        if(option == 3){
+            handleCommandInGame(command);
+        }else{
+            gameController->getNextCharacterCard();
+        }
+    }catch(exception e){
         client->write("Not a valid command\n");
     }
 }

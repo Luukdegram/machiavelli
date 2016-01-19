@@ -36,6 +36,7 @@ private:
     bool firstTurn;
     bool secondCard;
     bool lastRound;
+    bool lastCommand;
     int goldCoins;
 
 public:
@@ -98,6 +99,10 @@ public:
     }
 
 
+    bool isLastCommand() const {
+        return lastCommand;
+    }
+
     bool isLastRound() const {
         return lastRound;
     }
@@ -157,6 +162,10 @@ public:
     }
 
 
+    void setLastCommand(bool lastCommand) {
+        GameController::lastCommand = lastCommand;
+    }
+
     bool isFirstTurn() const {
         return firstTurn;
     }
@@ -198,6 +207,8 @@ public:
     void showEndGameText(std::shared_ptr<Player> winner, bool isDraw);
 
     void addExtraGold(std::shared_ptr<Player> player, std::shared_ptr<CharacterCard> cc);
+
+    void showLastTimeSpecialAbilityOption(std::shared_ptr<Player> player);
 };
 
 
