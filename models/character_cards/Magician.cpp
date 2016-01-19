@@ -2,6 +2,7 @@
 // Created by ronald on 21-12-15.
 //
 
+#include <unistd.h>
 #include "Magician.h"
 #include "../CharacterCardFactory.h"
 

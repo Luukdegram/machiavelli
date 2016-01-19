@@ -445,8 +445,6 @@ void GameController::getTwoBuildingCardsAndPutOneBack(shared_ptr<Player> p){
         int answer = stoi(test);
         p->setBlocked(false);
 
-        cout << answer << endl;
-
         // If user enters number higher than 2 cards he can chose then pick 2nd card.
         if (answer >= 2) {
             answer = 1;

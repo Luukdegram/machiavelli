@@ -38,17 +38,19 @@ void Condotierri::removeBuilding(std::shared_ptr<Player> player, std::shared_ptr
         client->write("Which building do you want to remove?\n");
         int counter = 0;
         for (shared_ptr<BuildingCard> card : buildBuildings) {
-            client->write("[" + to_string(counter) + "] " + card->getName());
+            client->write("[" + to_string(counter) + "] " + card->getName() + "\n");
+            counter ++;
         }
 
         int answer = stoi(client->readline());
+
 
         if (answer >= buildBuildings.size()) {
             client->write("Invalid option! \n");
             removeBuilding(player, gameController);
             return;
         }
-
+        
         shared_ptr<BuildingCard> chosenCard = buildBuildings.at(answer);
         if (buildBuildings.size() < 8) {
             if (chosenCard->getValue() > 1) {

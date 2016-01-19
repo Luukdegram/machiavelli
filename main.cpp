@@ -84,21 +84,24 @@ void handle_client(shared_ptr<Socket> client) // this function runs in a separat
         while (true) { // game loop
             try {
                 if(client->is_open()) {
-                    // read first line of request
-                    string cmd{client->readline()};
-                    cerr << '[' << client->get_dotted_ip() << " (" << client->get_socket() << ") " << player->get_name() << "] " << cmd << '\n';
+                    //if(!player->isBlocked()) {
+                        // read first line of request
+                        string cmd{client->readline()};
+                        cerr << '[' << client->get_dotted_ip() << " (" << client->get_socket() << ") " <<
+                        player->get_name() << "] " << cmd << '\n';
 
-                    if (cmd == "quit") {
-                        client->write("Bye!\r\n");
-                        break;
-                    }
+                        if (cmd == "quit") {
+                            client->write("Bye!\r\n");
+                            break;
+                        }
 
-                    if(!player->isBlocked()) {
-                        ClientCommand command{cmd, client, player};
-                        queue.put(command);
-                    } else {
-                        queue.clear();
-                    }
+                        if (!player->isBlocked()) {
+                            ClientCommand command{cmd, client, player};
+                            queue.put(command);
+                        } else {
+                            queue.clear();
+                        }
+                    //}
                 } else {
                     break;
                 }
