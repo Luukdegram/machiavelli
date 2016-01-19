@@ -432,22 +432,38 @@ void GameController::addCoins(shared_ptr<Player> p, int amount){
 }
 
 void GameController::getTwoBuildingCardsAndPutOneBack(shared_ptr<Player> p){
-    // Remove 1 card if player has building cards
-    if(p->getBuildingCards().size() > 0) {
-        int size = static_cast<int>(p->getBuildingCards().size());
-        uniform_int_distribution<int> dist{0, size};
+    p->getClient()->write("Please chose a card to keep: \n");
 
-        p->getBuildingCards().erase(find(p->getBuildingCards().begin(), p->getBuildingCards().end(), p->getBuildingCards().at(dist(dre))));
+    if(buildingCards.size() > 1) {
+        // Add 2 cards to player
+        for (int i = 0; i < 2; i++) {
+            p->getClient()->write("[" + to_string(i) + "] " + buildingCards.at(i)->getName() + "\n");
+        }
+
+        p->setBlocked(true);
+        string test = p->getClient()->readline();
+        int answer = stoi(test);
+        p->setBlocked(false);
+
+        cout << answer << endl;
+
+        // If user enters number higher than 2 cards he can chose then pick 2nd card.
+        if (answer >= 2) {
+            answer = 1;
+        }
+
+        p->getBuildingCards().push_back(buildingCards.at(answer));
+        p->getClient()->write("You have chosen for " + buildingCards.at(answer)->getName() + "\n");
+
+        // Remove the cards from the stock
+        buildingCards.erase(buildingCards.begin() + 2);
+
+    } else if (buildingCards.size() == 1) {
+        p->getBuildingCards().push_back(buildingCards.at(0));
+        buildingCards.erase(buildingCards.begin() + 1);
+    } else {
+        p->getClient()->write("Er zijn geen kaarten meer op de stapel");
     }
-
-    // Add 2 cards to player
-    for(int i = 0; i < 2; i++) {
-        p->getBuildingCards().push_back(buildingCards.at(i));
-    }
-    // remove 2 cards from building cards
-    buildingCards.erase(buildingCards.end() - 2, buildingCards.end());
-
-    p->getClient()->clear_screen();
 }
 
 void GameController::getNextCharacterCard(){
@@ -553,7 +569,7 @@ void GameController::showPossibleBuildings(shared_ptr<Player> player){
     setCanBuild(true);
     shared_ptr<Socket> client = player->getClient();
 
-    client->clear_screen();
+    //client->clear_screen();
     client->write("Possible buildings you can build: \r\n");
 
     for(int i = 0; i < player->getBuildingCards().size(); i++){
@@ -561,7 +577,7 @@ void GameController::showPossibleBuildings(shared_ptr<Player> player){
             client->write("[" + to_string(i) + "] " + player->getBuildingCards()[i]->getName() + "\r\n");
         }
     }
-    client->write("If you don't want to build a building, type '123' \r\n machiavli>");
+    client->write("If you don't want to build a building, type '123' \r\n machiavelli>");
 }
 
 void GameController::buildBuilding(int option, shared_ptr<Player> player){

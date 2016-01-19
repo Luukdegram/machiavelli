@@ -95,8 +95,12 @@ void handle_client(shared_ptr<Socket> client) // this function runs in a separat
                         break;
                     }
 
-                    ClientCommand command{cmd, client, player};
-                    queue.put(command);
+                    if(!player->isBlocked()) {
+                        ClientCommand command{cmd, client, player};
+                        queue.put(command);
+                    } else {
+                        queue.clear();
+                    }
                 } else {
                     break;
                 }
