@@ -58,10 +58,12 @@ void CommandHandler::handleCommandInGame(ClientCommand command){
                 case 1 :
                     gameController->addCoins(player, 2);
                     gameController->showPossibleBuildings(player);
+                    player->setChoseMainOption(true);
                     break;
                 case 2 :
                     gameController->getTwoBuildingCardsAndPutOneBack(player);
                     gameController->showPossibleBuildings(player);
+                    player->setChoseMainOption(true);
                     break;
                 case 3 :
                     if(!player->isUsedAbility()) {
@@ -110,6 +112,7 @@ void CommandHandler::handleLastCommand(ClientCommand command) {
         }else{
             gameController->getNextCharacterCard();
         }
+        gameController->setLastCommand(false);
     }catch(exception e){
         client->write("Not a valid command\n");
     }

@@ -427,7 +427,7 @@ void GameController::calculatePoints(shared_ptr<Player> p){
 }
 
 void GameController::addCoins(shared_ptr<Player> p, int amount){
-    setGoldCoins(goldCoins -= amount);
+    //setGoldCoins(goldCoins -= amount);
     p->setGoldCoins(p->getGoldCoins() + amount);
 }
 
@@ -460,7 +460,9 @@ void GameController::getNextCharacterCard(){
             shared_ptr<Player> p = players[i];
             if (find(p->getCharacterCards().begin(), p->getCharacterCards().end(), cc) !=
                 p->getCharacterCards().end()) {
+                showGameUI(p, cc);
                 p->setUsedAbility(false);
+                p->setChoseMainOption(false);
 //                if(cc->getCharacterType() == CharacterType::PREACHER ||
 //                        cc->getCharacterType() == CharacterType::MERCHANT ||
 //                        cc->getCharacterType() == CharacterType::KING ||
