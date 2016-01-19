@@ -196,6 +196,8 @@ public:
     void showEndGameText(std::shared_ptr<Player> player);
 
     void showEndGameText(std::shared_ptr<Player> winner, bool isDraw);
+
+    void addExtraGold(std::shared_ptr<Player> player, std::shared_ptr<CharacterCard> cc);
 };
 
 

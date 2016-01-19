@@ -460,6 +460,14 @@ void GameController::getNextCharacterCard(){
             shared_ptr<Player> p = players[i];
             if (find(p->getCharacterCards().begin(), p->getCharacterCards().end(), cc) !=
                 p->getCharacterCards().end()) {
+
+                if(cc->getCharacterType() == CharacterType::PREACHER ||
+                        cc->getCharacterType() == CharacterType::MERCHANT ||
+                        cc->getCharacterType() == CharacterType::KING ||
+                        cc->getCharacterType() == CharacterType::CONDOTTIERI ){
+                    addExtraGold(p, cc);
+                }
+
                 if (isFirstTurn()) {
                     p->setHasTurn(true);
                     setFirstTurn(false);
@@ -496,6 +504,43 @@ void GameController::getNextCharacterCard(){
     else{
         doNextTurn();
     }
+}
+
+void GameController::addExtraGold(shared_ptr<Player> player, shared_ptr<CharacterCard> cc){
+    int gold = player->getGoldCoins();
+
+    switch(cc->getCharacterType()){
+        case CharacterType::CONDOTTIERI :
+            for(shared_ptr<BuildingCard> bc : player->getBuildBuildings()){
+                if(bc->getColor() == BuildingColor::RED){
+                    gold++;
+                }
+            }
+            break;
+        case CharacterType::MERCHANT :
+            for(shared_ptr<BuildingCard> bc : player->getBuildBuildings()){
+                if(bc->getColor() == BuildingColor::GREEN){
+                    gold++;
+                }
+            }
+            break;
+        case CharacterType::PREACHER :
+            for(shared_ptr<BuildingCard> bc : player->getBuildBuildings()){
+                if(bc->getColor() == BuildingColor::BLUE){
+                    gold++;
+                }
+            }
+            break;
+        case CharacterType::KING :
+            for(shared_ptr<BuildingCard> bc : player->getBuildBuildings()){
+                if(bc->getColor() == BuildingColor::YELLOW){
+                    gold++;
+                }
+            }
+            break;
+    }
+
+    player->setGoldCoins(gold);
 }
 
 void GameController::removePlayer(std::shared_ptr<Player> player) {
@@ -550,18 +595,29 @@ std::shared_ptr<Player> GameController::getOpponent(shared_ptr<Player> player) {
 }
 
 void GameController::showPossibleBuildings(shared_ptr<Player> player){
+
     setCanBuild(true);
     shared_ptr<Socket> client = player->getClient();
 
     client->clear_screen();
     client->write("Possible buildings you can build: \r\n");
 
+    int possibleBuildings = 0;
     for(int i = 0; i < player->getBuildingCards().size(); i++){
         if(player->getBuildingCards()[i]->getValue() <= player->getGoldCoins()) {
             client->write("[" + to_string(i) + "] " + player->getBuildingCards()[i]->getName() + "\r\n");
+            possibleBuildings++;
         }
     }
-    client->write("If you don't want to build a building, type '123' \r\n machiavli>");
+
+    if(possibleBuildings == 0){
+        client->clear_screen();
+        client->write("You don't have enough gold to build a building... getting next character card");
+        sleep(1);
+        getNextCharacterCard();
+    }else{
+        client->write("If you don't want to build a building, type '123' \r\n machiavli>");
+    }
 }
 
 void GameController::buildBuilding(int option, shared_ptr<Player> player){
