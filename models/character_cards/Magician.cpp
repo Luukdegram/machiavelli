@@ -10,6 +10,12 @@ using namespace std;
 void Magician::doSpecialAbility(std::shared_ptr<Player> player, std::string command, shared_ptr<GameController> gameController) {
     CharacterCard::doSpecialAbility(player, command, gameController);
     handleSpecialAbility(player, command, gameController);
+
+    if(player->isChoseMainOption()){
+        gameController->getNextCharacterCard();
+    }else{
+        gameController->showGameUI(player, std::shared_ptr<CharacterCard>(this));
+    }
 }
 
 void Magician::handleSpecialAbility(std::shared_ptr<Player> player, std::string command, shared_ptr<GameController> gameController) {

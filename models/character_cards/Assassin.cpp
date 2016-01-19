@@ -3,6 +3,7 @@
 //
 
 #include <iostream>
+#include <unistd.h>
 #include "Assassin.h"
 #include "../CharacterCardFactory.h"
 
@@ -27,6 +28,12 @@ void Assassin::doSpecialAbility(shared_ptr<Player> player, std::string command, 
     if(types[answer] != CharacterType::INVALID) {
         gameController->getOpponent(player)->setKilled(types[answer]);
         player->getClient()->write("Successfully killed the card \n");
+        sleep(2);
+        if(player->isChoseMainOption()){
+            gameController->getNextCharacterCard();
+        }else{
+            gameController->showGameUI(player, std::shared_ptr<CharacterCard>(this));
+        }
     } else {
         Assassin::doSpecialAbility(player, command, gameController);
     }

@@ -35,6 +35,7 @@ private:
 	bool isKing;
 	bool firstToFinish;
 	bool hasTurn;
+	bool choseMainOption;
 	int points;
     CharacterType stolen = CharacterType::INVALID;
     CharacterType killed = CharacterType::INVALID;
@@ -52,7 +53,16 @@ public:
         return usedAbility;
     }
 
-    void setUsedAbility(bool usedAbility) {
+
+	bool isChoseMainOption() const {
+		return choseMainOption;
+	}
+
+	void setChoseMainOption(bool choseMainOption) {
+		Player::choseMainOption = choseMainOption;
+	}
+
+	void setUsedAbility(bool usedAbility) {
         Player::usedAbility = usedAbility;
     }
 

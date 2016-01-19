@@ -19,4 +19,10 @@ void Preacher::countBlueBuildings(std::shared_ptr<Player> player) {
 void Preacher::doSpecialAbility(std::shared_ptr<Player> player, std::string string, shared_ptr<GameController> gameController) {
     CharacterCard::doSpecialAbility(player, string, gameController);
     countBlueBuildings(player);
+
+    if(player->isChoseMainOption()){
+        gameController->getNextCharacterCard();
+    }else{
+        gameController->showGameUI(player, std::shared_ptr<CharacterCard>(this));
+    }
 }

@@ -3,6 +3,7 @@
 //
 
 #include <iostream>
+#include <unistd.h>
 #include "Thief.h"
 #include "../CharacterCardFactory.h"
 #include "../CharacterType.h"
@@ -26,6 +27,12 @@ void Thief::doSpecialAbility(shared_ptr<Player> player, std::string command, sha
     if(types[answer] != CharacterType::INVALID) {
         gameController->getOpponent(player)->setStolen(types[answer]);
         player->getClient()->write("Successfully robbed from the card \n");
+        sleep(2);
+        if(player->isChoseMainOption()){
+            gameController->getNextCharacterCard();
+        }else{
+            gameController->showGameUI(player, std::shared_ptr<CharacterCard>(this));
+        }
     } else {
         Thief::doSpecialAbility(player, command, gameController);
     }

@@ -66,6 +66,7 @@ void CommandHandler::handleCommandInGame(ClientCommand command){
                 case 3 :
                     if(!player->isUsedAbility()) {
                         player->getCharacter()->doSpecialAbility(player, command.get_cmd(), gameController);
+                        player->setUsedAbility(true);
                     } else {
                         client->write("Already used your special ability.\n");
                     }

@@ -15,6 +15,12 @@ void Builder::doSpecialAbility(std::shared_ptr<Player> player, std::string comma
     player->getBuildingCards().push_back(gameController->getRandomBuildingCard());
 
     buildBuilding(player, 0);
+
+    if(player->isChoseMainOption()){
+        gameController->getNextCharacterCard();
+    }else{
+        gameController->showGameUI(player, std::shared_ptr<CharacterCard>(this));
+    }
 }
 
 void Builder::buildBuilding(std::shared_ptr<Player> player, int count) {

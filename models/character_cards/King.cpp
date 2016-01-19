@@ -21,4 +21,10 @@ void King::doSpecialAbility(std::shared_ptr<Player> player, std::string command,
     CharacterCard::doSpecialAbility(player, command, gameController);
 
     countBuildings(player);
+
+    if(player->isChoseMainOption()){
+        gameController->getNextCharacterCard();
+    }else{
+        gameController->showGameUI(player, std::shared_ptr<CharacterCard>(this));
+    }
 }

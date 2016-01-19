@@ -460,7 +460,7 @@ void GameController::getNextCharacterCard(){
             shared_ptr<Player> p = players[i];
             if (find(p->getCharacterCards().begin(), p->getCharacterCards().end(), cc) !=
                 p->getCharacterCards().end()) {
-
+                p->setUsedAbility(false);
 //                if(cc->getCharacterType() == CharacterType::PREACHER ||
 //                        cc->getCharacterType() == CharacterType::MERCHANT ||
 //                        cc->getCharacterType() == CharacterType::KING ||

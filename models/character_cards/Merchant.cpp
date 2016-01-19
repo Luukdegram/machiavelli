@@ -9,6 +9,12 @@ using namespace std;
 void Merchant::doSpecialAbility(shared_ptr<Player> player, std::string string, shared_ptr<GameController> gameController) {
     CharacterCard::doSpecialAbility(player, string, gameController);
     addCoins(player);
+
+    if(player->isChoseMainOption()){
+        gameController->getNextCharacterCard();
+    }else{
+        gameController->showGameUI(player, std::shared_ptr<CharacterCard>(this));
+    }
 }
 
 void Merchant::addCoins(std::shared_ptr<Player> p) {
