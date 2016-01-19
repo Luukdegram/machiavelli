@@ -8,11 +8,8 @@
 
 #include <thread>
 #include <iostream>
-#include <exception>
 #include <memory>
-#include <utility>
 #include <vector>
-#include <bits/signum.h>
 #include <signal.h>
 
 using namespace std;
@@ -23,6 +20,7 @@ using namespace std;
 #include "models/Player.hpp"
 #include "controller/GameController.h"
 #include "controller/CommandHandler.h"
+#include "models/Server.h"
 
 namespace machiavelli {
     const int tcp_port {1080};
@@ -145,6 +143,8 @@ int main(int argc, const char * argv[])
 
 	// create a server socket
 	ServerSocket server {machiavelli::tcp_port};
+
+    shared_ptr<Server> s(new Server);
 
     while (true) {
 		try {

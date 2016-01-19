@@ -22,6 +22,8 @@ public:
     void handleCommandInGame(ClientCommand command);
 
     void handleCommandToBuild(ClientCommand command);
+
+    void handleLastCommand(ClientCommand command);
 };
 
 
