@@ -36,6 +36,7 @@ private:
 	bool firstToFinish;
 	bool hasTurn;
 	bool choseMainOption;
+    bool blocked;
 	int points;
     CharacterType stolen = CharacterType::INVALID;
     CharacterType killed = CharacterType::INVALID;
@@ -48,6 +49,14 @@ public:
 	void setName(const std::string &name) {
 		Player::name = name;
 	}
+
+    bool isBlocked() const {
+        return blocked;
+    }
+
+    void setBlocked(bool blocked) {
+        Player::blocked = blocked;
+    }
 
     bool isUsedAbility() const {
         return usedAbility;

@@ -31,6 +31,11 @@ public:
 		return val;
 	}
 
+    void clear()
+    {
+        q.clear();
+    }
+
 private:
     std::mutex mtx;
     std::condition_variable cond;
