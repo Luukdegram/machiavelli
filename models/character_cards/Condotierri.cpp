@@ -38,7 +38,8 @@ void Condotierri::removeBuilding(std::shared_ptr<Player> player, std::shared_ptr
         client->write("Which building do you want to remove?\n");
         int counter = 0;
         for (shared_ptr<BuildingCard> card : buildBuildings) {
-            client->write("[" + to_string(counter) + "] " + card->getName());
+            client->write("[" + to_string(counter) + "] " + card->getName() + "\n");
+            counter++;
         }
 
         int answer = stoi(client->readline());
