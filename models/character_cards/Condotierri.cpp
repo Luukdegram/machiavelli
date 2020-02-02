@@ -15,7 +15,7 @@ void Condotierri::doSpecialAbility(std::shared_ptr<Player> player, std::string c
     if(player->isChoseMainOption()){
         gameController->getNextCharacterCard();
     }else{
-        gameController->showGameUI(player, std::shared_ptr<CharacterCard>(this));
+       // gameController->showGameUI(player, std::shared_ptr<CharacterCard>(this));
     }
 }
 
